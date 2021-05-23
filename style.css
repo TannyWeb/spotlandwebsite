@@ -1578,7 +1578,7 @@ __________________________________________________________*****/
 
 .timetable_single p:nth-of-type(2), .timetable_single p:nth-of-type(4), .timetable_single p:nth-of-type(6), .timetable_single p:nth-of-type(8), .timetable_single p:nth-of-type(10), .timetable_single p:nth-of-type(12), .timetable_single p:nth-of-type(14){
 
-     margin-bottom: 30px;
+     /* margin-bottom: 30px; */
 }
 
 .timetable_single hr{
@@ -1587,6 +1587,12 @@ __________________________________________________________*****/
     width:100px;
     margin-top: 10px;
     border:1px solid #26A1AB;
+}
+
+#pr4 img {
+    width: 250px;
+    align-self: center;
+    height: 220px;
 }
 
 .bold{
