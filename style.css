@@ -1733,6 +1733,13 @@ img.footer_logo{
 }
 
 
+.aims_wrap_ima.ge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 
 
 
