@@ -1862,9 +1862,27 @@ margin: 0 auto;
 /***** latestnews section END
 __________________________________________________________*****/
 
+.tanny_wrap {
+    flex-direction: column;
+}
+
+.tanny_wrap_item {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+}
+
+.tanny_wrap_item2 img {
+    height: auto;
+    width: 100%;
+}
+/***** comm fun styling Start
+__________________________________________________________*****/
 
 
 
+/***** comm fun styling end
+__________________________________________________________*****/
 
 
 /***** START: MEDIA QUERIES = MAX-WIDTH 900PX
