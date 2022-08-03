@@ -1671,10 +1671,12 @@ img.footer_logo{
 .copyright{
 
     text-align: center;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     color:#fff;
     font-family: 'Open Sans', sans-serif;
     padding-bottom: 30px;
+    padding-top: 20px;
+    background-color: black;
 
 }
 
@@ -1726,6 +1728,8 @@ img.footer_logo{
     -webkit-justify-content: space-around;
         -ms-flex-pack: distribute;
             justify-content: space-around;
+
+                padding: 20px 0;
 }
 
 
@@ -1870,6 +1874,7 @@ __________________________________________________________*****/
     display: flex;
     flex-direction: row-reverse;
     width: 100%;
+    align-items: center;
 }
 
 .tanny_wrap_item2 img {
