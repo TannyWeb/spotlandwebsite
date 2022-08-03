@@ -1743,7 +1743,7 @@ img.footer_logo{
 
 
 .javp {
-    width: 100%;
+    width: 100% !important;
 }
 
 
