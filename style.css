@@ -2495,6 +2495,7 @@ __________________________________________________________*****/
 .councillor-surgeries .imgs {
     width: 100%;
     display: flex;
+    justify-content: center;
 }
 .councillor-surgeries img {
     width: 50%;
