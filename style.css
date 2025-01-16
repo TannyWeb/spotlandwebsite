@@ -330,12 +330,14 @@ __________________________________________________________*****/
 .comm-fund img {
     width: 300px;
     margin: 0 auto;
+    height: max-content;
 }
 
 @media screen and (min-width:800px){
     .comm-fund {
     
         flex-direction: row;
+        align-items: center;
     }
 
     .comm-fund img {
