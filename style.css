@@ -346,6 +346,12 @@ __________________________________________________________*****/
     }
 }
 
+#b {
+    border-top: 2px solid  #26a1ab;
+    border-bottom: 2px solid #26a1ab;
+    padding-top: 30px;
+}
+
 
 
 /***** END : ABOUT US
