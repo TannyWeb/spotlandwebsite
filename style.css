@@ -1859,6 +1859,13 @@ height: 100%;
 
 }
 
+@media screen and (min-width:992px){
+    .gallery_image_wrap a {
+        width: 50%;
+}
+}
+
+
 
 
 /***** GALLERY PAGE END
