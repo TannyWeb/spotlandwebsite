@@ -343,10 +343,15 @@ __________________________________________________________*****/
 
 .award .award-right img {
     border-radius: 50%;
-    width: 400px;
+    width: 85%;
     margin: 20px auto;
     position: relative;
     display: block;
+}
+
+
+@media (min-width: 700px) {
+    width: 400px;
 }
 
 @media (min-width: 900px) {
