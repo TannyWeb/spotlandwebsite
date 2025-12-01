@@ -475,9 +475,10 @@ __________________________________________________________*****/
 }
 
 .services_info{
-    width: 60%;
+    width: 100%;
     background-color: #26A1AB;
-    height:400px;
+    height:auto;
+    padding-bottom: 30px;
 }
 
 .services_info h2{
@@ -494,7 +495,7 @@ __________________________________________________________*****/
     width:80%;
     margin: 0 auto;
     color:#fff;
-    margin: 30px auto 0 auto;
+    margin: 30px auto;
     font-family: 'Open Sans', sans-serif;
     line-height: 1.5;
     font-size: 18px;
