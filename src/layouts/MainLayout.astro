@@ -1,0 +1,167 @@
+---
+import { getNavigation } from '../lib/sanity';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Spotland Community Centre - Your friendly neighbourhood hub for advice, health, youth programs, and education.' } = Astro.props;
+
+// Fetch navigation data
+let navigation;
+try {
+  navigation = await getNavigation();
+} catch (error) {
+  console.error('Error fetching navigation:', error);
+  navigation = null;
+}
+
+const menuItems = navigation?.header?.menuItems || [];
+const footerInfo = navigation?.footer || {};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen flex flex-col bg-slate-50 text-neutral-900 font-sans">
+    <!-- Skip to main content link for accessibility -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded focus:ring-2 focus:ring-primary focus:ring-offset-2"
+    >
+      Skip to main content
+    </a>
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-40 bg-white border-b border-neutral-200 shadow-sm" role="banner">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav class="flex items-center justify-between h-16" role="navigation" aria-label="Main navigation">
+          <a 
+            href="/" 
+            class="text-2xl font-bold text-slate-900 hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+          >
+            Spotland Community Hub
+          </a>
+          
+          {menuItems.length > 0 && (
+            <ul class="flex gap-6">
+              {menuItems.map((item: any) => (
+                <li>
+                  <a
+                    href={item.link}
+                    class="text-neutral-700 hover:text-primary font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded px-2 py-1"
+                    target={item.openInNewTab ? '_blank' : undefined}
+                    rel={item.openInNewTab ? 'noopener noreferrer' : undefined}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-grow" role="main">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 mt-12" role="contentinfo">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="text-center">
+          <h2 class="text-xl font-bold text-white mb-3">Spotland Community Hub</h2>
+          <p class="mb-4">
+            {footerInfo.tagline || 'Your friendly neighbourhood hub'}
+          </p>
+          {footerInfo.contactInfo?.address && (
+            <p class="mb-4 whitespace-pre-line">{footerInfo.contactInfo.address}</p>
+          )}
+          
+          {footerInfo.contactInfo && (
+            <div class="space-y-2">
+              {footerInfo.contactInfo.phone && (
+                <p>
+                  <span class="font-medium">Phone:</span>{' '}
+                  <a
+                    href={`tel:${footerInfo.contactInfo.phone.replace(/\s/g, '')}`}
+                    class="text-primary-light hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary-light focus:ring-offset-2 focus:ring-offset-slate-900 rounded"
+                  >
+                    {footerInfo.contactInfo.phone}
+                  </a>
+                </p>
+              )}
+              {footerInfo.contactInfo.email && (
+                <p>
+                  <span class="font-medium">Email:</span>{' '}
+                  <a
+                    href={`mailto:${footerInfo.contactInfo.email}`}
+                    class="text-primary-light hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary-light focus:ring-offset-2 focus:ring-offset-slate-900 rounded"
+                  >
+                    {footerInfo.contactInfo.email}
+                  </a>
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+        
+        <div class="mt-8 pt-6 border-t border-slate-800 text-center text-sm">
+          <p>Built for Spotland &copy; {new Date().getFullYear()}</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  /* Import Inter font */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  
+  /* Custom teal color for Tailwind */
+  :root {
+    --color-teal: #26a1ab;
+    --color-teal-dark: #1e7e86;
+  }
+  
+  /* Ensure focus indicators are always visible - WCAG AA compliant */
+  *:focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 2px;
+  }
+  
+  /* Screen reader only utility (for accessibility) */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  .sr-only.focus\:not-sr-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0.5rem 1rem;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+</style>
+

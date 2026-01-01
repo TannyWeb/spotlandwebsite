@@ -1,0 +1,68 @@
+---
+interface Props {
+  service: {
+    _id: string;
+    title: string;
+    slug: {
+      current: string;
+    } | string;
+    category: string;
+    schedule?: string;
+    featured?: boolean;
+  };
+}
+
+const { service } = Astro.props;
+
+// Category display names
+const categoryLabels: Record<string, string> = {
+  advice: 'Advice & Support',
+  health: 'Health & Wellbeing',
+  youth: 'Youth Programs',
+  education: 'Education & Learning',
+};
+
+// Category colors - using teal theme for consistency
+const categoryColors: Record<string, string> = {
+  advice: 'bg-primary-light text-primary-dark',
+  health: 'bg-primary-light text-primary-dark',
+  youth: 'bg-primary-light text-primary-dark',
+  education: 'bg-primary-light text-primary-dark',
+};
+
+// Get the slug value (handle both object and string formats)
+const slugValue = typeof service.slug === 'string' ? service.slug : service.slug.current;
+const serviceUrl = `/services/${slugValue}`;
+---
+
+<article class="group bg-white rounded-2xl shadow-md p-6 hover:-translate-y-1 hover:shadow-lg transition-all duration-200 border-t-4 border-primary border border-slate-200 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2">
+  <div class="mb-3">
+    <span class={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${categoryColors[service.category] || 'bg-primary-light text-primary-dark'}`}>
+      {categoryLabels[service.category] || service.category}
+    </span>
+  </div>
+  
+  <h3 class="text-xl font-bold text-slate-800 mb-3">
+    <a 
+      href={serviceUrl}
+      class="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+    >
+      {service.title}
+    </a>
+  </h3>
+  
+  {service.schedule && (
+    <p class="text-neutral-700 mb-4 flex items-start gap-2 text-base">
+      <span class="text-lg" aria-hidden="true">🕐</span>
+      <span>{service.schedule}</span>
+    </p>
+  )}
+  
+  <a
+    href={serviceUrl}
+    class="inline-block bg-primary text-white px-6 py-2 rounded-md font-medium hover:bg-primary-dark transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+  >
+    Learn more
+  </a>
+</article>
+

@@ -1,0 +1,89 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getServices } from '../lib/sanity';
+import ServiceCard from '../components/ServiceCard.astro';
+
+// Fetch all services from Sanity using GROQ query
+let services = [];
+try {
+  services = await getServices();
+} catch (error) {
+  console.error('Error fetching services:', error);
+}
+
+// Separate featured and regular services
+const featuredServices = services.filter((service: any) => service.featured);
+const regularServices = services.filter((service: any) => !service.featured);
+---
+
+<MainLayout title="Welcome to Spotland Community Centre">
+  <!-- Hero Section -->
+  <section class="bg-[#26a1ab] text-white py-16 md:py-24" aria-labelledby="hero-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 id="hero-heading" class="text-4xl md:text-5xl font-bold mb-4 text-white">
+        Welcome to your Community Hub
+      </h1>
+      <p class="text-xl md:text-2xl text-white max-w-2xl">
+        We're here to support you and your family with a friendly smile and helping hand. 
+        Explore our services below – there's something for everyone!
+      </p>
+    </div>
+  </section>
+
+  <!-- Featured Services -->
+  {featuredServices.length > 0 && (
+    <section class="py-12" aria-labelledby="featured-heading">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 id="featured-heading" class="text-3xl font-bold text-neutral-900 mb-8">
+          Featured Services
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          {featuredServices.map((service: any) => (
+            <ServiceCard service={service} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- All Services -->
+  <section class="py-12 bg-neutral-50" aria-labelledby="services-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 id="services-heading" class="text-3xl font-bold text-neutral-900 mb-8">
+        {featuredServices.length > 0 ? 'More Services' : 'Our Services'}
+      </h2>
+      
+      {regularServices.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {regularServices.map((service: any) => (
+            <ServiceCard service={service} />
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-12">
+          <p class="text-xl text-neutral-600">
+            We're setting up our services. Check back soon – we can't wait to welcome you!
+          </p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="bg-primary text-white py-12" aria-labelledby="cta-heading">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 id="cta-heading" class="text-3xl font-bold mb-4">
+        Have Questions? We'd Love to Hear From You!
+      </h2>
+      <p class="text-xl text-teal-50 mb-6 max-w-2xl mx-auto">
+        Our friendly team is here to help you find the right service or answer any questions you might have.
+      </p>
+      <a
+        href="tel:01619999999"
+        class="inline-block bg-white text-primary px-8 py-3 rounded-md font-bold text-lg hover:bg-teal-50 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary"
+      >
+        Give Us a Call
+      </a>
+    </div>
+  </section>
+</MainLayout>

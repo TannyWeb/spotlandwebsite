@@ -1,0 +1,56 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout title="Page Not Found - Spotland Community Centre">
+  <div class="container mx-auto px-4 py-16">
+    <div class="max-w-2xl mx-auto text-center">
+      <div class="mb-8">
+        <svg
+          class="w-32 h-32 mx-auto text-teal-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+      </div>
+      
+      <h1 class="text-5xl font-bold text-neutral-900 mb-4">
+        Oops! We Can't Find That Page
+      </h1>
+      
+      <p class="text-xl text-neutral-600 mb-8">
+        Don't worry – even neighbours get a bit lost sometimes! The page you're looking for 
+        might have been moved or doesn't exist.
+      </p>
+      
+      <div class="space-y-4">
+        <a
+          href="/"
+          class="inline-block bg-teal-600 text-white px-8 py-3 rounded-md font-bold text-lg hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2"
+        >
+          Take Me Home
+        </a>
+        
+        <p class="text-neutral-600">
+          Or if you need help, 
+          <a
+            href="tel:01619999999"
+            class="text-teal-600 hover:text-teal-700 underline font-medium focus:outline-none focus:ring-2 focus:ring-teal-600 rounded"
+          >
+            give us a ring
+          </a>
+           – we're here to help!
+        </p>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+

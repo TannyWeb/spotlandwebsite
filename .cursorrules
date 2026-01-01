@@ -1,0 +1,72 @@
+# Spotland Community Centre - Development Guidelines
+
+## Architecture Principles
+- **Service-First Architecture**: All features should be organized around community services
+- The project uses Astro with Payload CMS 3.0 for content management
+- Database: SQLite via Payload Drizzle adapter (@payloadcms/db-sqlite)
+- Styling: Tailwind CSS with custom design system
+- TypeScript strict mode is enabled - maintain type safety at all times
+
+## Code Style & Standards
+- Use TypeScript strict mode for all files
+- Follow functional programming patterns where possible
+- Prefer composition over inheritance
+- Keep components small and focused on a single responsibility
+- Use meaningful variable and function names that reflect the community-focused mission
+
+## Tone of Voice: "Friendly Neighbour"
+All user-facing text, error messages, and UI copy should embody a warm, welcoming, community-oriented tone:
+- Use conversational language ("We're here to help" vs "Support available")
+- Be empathetic and understanding
+- Avoid jargon - write for everyone in the community
+- Use inclusive language
+- Examples:
+  - Good: "Let's find the right service for you"
+  - Bad: "Select service category"
+  - Good: "We'd love to hear from you!"
+  - Bad: "Contact form"
+
+## Accessibility (WCAG AA Standards)
+- Maintain color contrast ratio of at least 4.5:1 for normal text
+- Use semantic HTML elements
+- Include proper ARIA labels where needed
+- Ensure keyboard navigation works for all interactive elements
+- Test with screen readers in mind
+- Images must have meaningful alt text
+
+## Design System
+- Primary Color (Teal): #26a1ab - Use for CTAs and primary accents
+- High contrast theme for accessibility
+- Mobile-first responsive design
+- Consistent spacing using Tailwind's spacing scale
+
+## File Organization
+- Collections: `src/collections/` - Payload CMS content types
+- Globals: `src/globals/` - Payload CMS global settings
+- Layouts: `src/layouts/` - Reusable page layouts
+- Pages: `src/pages/` - Astro pages (file-based routing)
+- Components: `src/components/` - Reusable UI components
+- Styles: `src/styles/` - Global styles and Tailwind config
+
+## Payload CMS Patterns
+- Collections should have clear, descriptive field names
+- Use rich text editor (Lexical) for content that needs formatting
+- Always include slug fields for content that needs URLs
+- Use TypeScript types generated from Payload config
+- Admin panel is accessible at `/admin`
+
+## Best Practices
+- Write descriptive commit messages
+- Document complex logic with comments
+- Keep dependencies up to date
+- Test accessibility with keyboard navigation and screen readers
+- Optimize images and assets for web performance
+- Always consider mobile users first
+
+## Community-Focused Development
+Remember: This platform serves the Spotland Community Centre. Every feature should:
+- Make it easier for community members to access services
+- Be inclusive and welcoming to all
+- Prioritize clarity and ease of use over technical complexity
+- Reflect the caring, supportive nature of community work
+
