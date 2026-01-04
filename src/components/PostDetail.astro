@@ -1,0 +1,115 @@
+---
+import { urlFor } from '../lib/sanity';
+import PortableText from './PortableText';
+
+interface Props {
+  post: {
+    _id: string;
+    title: string;
+    publishedAt: string;
+    mainImage?: any;
+    body?: any[];
+    youtubeUrl?: string;
+    showAccreditationBadge?: boolean;
+  };
+}
+
+const { post } = Astro.props;
+
+// Get image URL - use Sanity image if available, otherwise use placeholder
+const placeholderImage = 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=1200';
+let imageUrl = placeholderImage;
+if (post.mainImage) {
+  try {
+    imageUrl = urlFor(post.mainImage).width(1200).height(675).fit('crop').auto('format').url();
+  } catch (error) {
+    console.error('Error generating image URL:', error);
+    imageUrl = placeholderImage;
+  }
+}
+
+// Extract YouTube video ID from URL
+function getYouTubeVideoId(url: string): string | null {
+  if (!url) return null;
+  
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+    /youtube\.com\/watch\?.*v=([^&\n?#]+)/,
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match && match[1]) {
+      return match[1];
+    }
+  }
+  
+  return null;
+}
+
+const youtubeVideoId = post.youtubeUrl ? getYouTubeVideoId(post.youtubeUrl) : null;
+
+// Format date
+const publishedDate = post.publishedAt 
+  ? new Date(post.publishedAt).toLocaleDateString('en-GB', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : '';
+---
+
+<article class="max-w-4xl mx-auto">
+  <!-- Accreditation Badge -->
+  {post.showAccreditationBadge && (
+    <div class="mb-6">
+      <span class="inline-block bg-[#d97706] text-white px-6 py-3 rounded-full text-lg font-bold shadow-lg">
+        Certified Quality
+      </span>
+    </div>
+  )}
+
+  <!-- Title -->
+  <h1 class="text-4xl md:text-5xl font-bold text-slate-900 leading-tight mb-6">
+    {post.title}
+  </h1>
+
+  <!-- Published Date -->
+  {publishedDate && (
+    <p class="text-slate-600 text-lg mb-8">
+      {publishedDate}
+    </p>
+  )}
+
+  <!-- Main Image -->
+  {post.mainImage && (
+    <div class="mb-10 rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+      <img 
+        src={imageUrl}
+        alt={post.title}
+        class="w-full h-auto object-cover"
+        loading="eager"
+      />
+    </div>
+  )}
+
+  <!-- Content -->
+    <PortableText content={post.body || []} client:load />
+    
+  <!-- YouTube Video Embed from youtubeUrl field -->
+    {youtubeVideoId && (
+      <div class="my-12 rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+        <div class="aspect-video w-full">
+          <iframe
+            src={`https://www.youtube.com/embed/${youtubeVideoId}`}
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            class="w-full h-full"
+          ></iframe>
+        </div>
+      </div>
+    )}
+</article>
+

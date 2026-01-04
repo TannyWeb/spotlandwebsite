@@ -1,6 +1,7 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
-import { getServiceBySlug } from '../../lib/sanity';
+import { getServiceBySlug, getFeaturedPost } from '../../lib/sanity';
+import ServiceDetail from '../../components/ServiceDetail';
 
 const { slug } = Astro.params;
 
@@ -17,47 +18,15 @@ if (!service) {
   return Astro.redirect('/404');
 }
 
-// Category display names
-const categoryLabels: Record<string, string> = {
-  advice: 'Advice & Support',
-  health: 'Health & Wellbeing',
-  youth: 'Youth Programs',
-  education: 'Education & Learning',
-};
-
-// Helper function to render Sanity Portable Text
-// Note: For production, install @portabletext/react or @portabletext/astro for proper rendering
-function renderPortableText(content: any[]): string {
-  if (!content || !Array.isArray(content)) return '';
-  
-  return content.map(block => {
-    if (block._type === 'block') {
-      const text = block.children?.map((child: any) => {
-        let text = child.text || '';
-        // Handle marks (bold, italic, etc.)
-        if (child.marks) {
-          child.marks.forEach((mark: string) => {
-            if (mark === 'strong') text = `<strong>${text}</strong>`;
-            if (mark === 'em') text = `<em>${text}</em>`;
-          });
-        }
-        return text;
-      }).join('') || '';
-      
-      // Handle block styles
-      if (block.style === 'h1') return `<h1 class="text-4xl font-bold mb-4 mt-8">${text}</h1>`;
-      if (block.style === 'h2') return `<h2 class="text-3xl font-bold mb-3 mt-6">${text}</h2>`;
-      if (block.style === 'h3') return `<h3 class="text-2xl font-bold mb-2 mt-4">${text}</h3>`;
-      if (block.listItem === 'bullet') return `<li class="ml-6 mb-2">${text}</li>`;
-      if (block.listItem === 'number') return `<li class="ml-6 mb-2">${text}</li>`;
-      
-      return `<p class="mb-4">${text}</p>`;
-    }
-    return '';
-  }).join('');
+// Fetch featured post for accreditation badge
+let featuredPost = null;
+try {
+  featuredPost = await getFeaturedPost();
+} catch (error) {
+  console.error('Error fetching featured post:', error);
 }
 
-const descriptionHtml = renderPortableText(service.description);
+const featuredPostSlug = featuredPost?.slug?.current || featuredPost?.slug || null;
 ---
 
 <MainLayout 
@@ -65,126 +34,56 @@ const descriptionHtml = renderPortableText(service.description);
   description={`Learn about our ${service.title} service at Spotland Community Centre.`}
 >
   <!-- Breadcrumb Navigation -->
-  <nav aria-label="Breadcrumb" class="bg-neutral-100 py-3">
-    <div class="container mx-auto px-4">
-      <ol class="flex items-center gap-2 text-sm">
-        <li>
-          <a href="/" class="text-teal-600 hover:text-teal-700 hover:underline">
-            Home
-          </a>
-        </li>
-        <li aria-hidden="true" class="text-neutral-400">/</li>
-        <li>
-          <span class="text-neutral-600">Services</span>
-        </li>
-        <li aria-hidden="true" class="text-neutral-400">/</li>
-        <li>
-          <span class="text-neutral-900 font-medium">{service.title}</span>
-        </li>
-      </ol>
-    </div>
+  <nav aria-label="Breadcrumb" class="bg-slate-100 py-3 -mx-4 px-4 mb-8">
+    <ol class="flex items-center gap-2 text-sm">
+      <li>
+        <a href="/" class="text-brand-teal hover:text-brand-dark hover:underline focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded">
+          Home
+        </a>
+      </li>
+      <li aria-hidden="true" class="text-slate-400">/</li>
+      <li>
+        <a href="/services" class="text-brand-teal hover:text-brand-dark hover:underline focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded">
+          Services
+        </a>
+      </li>
+      <li aria-hidden="true" class="text-slate-400">/</li>
+      <li>
+        <span class="text-slate-900 font-medium">{service.title}</span>
+      </li>
+    </ol>
   </nav>
 
   <!-- Service Content -->
-  <article class="container mx-auto px-4 py-12">
-    <div class="max-w-3xl mx-auto">
-      <!-- Category Badge -->
-      <div class="mb-4">
-        <span class="inline-block px-4 py-2 rounded-full text-sm font-semibold bg-teal-100 text-teal-800">
-          {categoryLabels[service.category] || service.category}
-        </span>
-      </div>
-
-      <!-- Title -->
-      <h1 class="text-4xl md:text-5xl font-bold text-neutral-900 mb-6">
-        {service.title}
-      </h1>
-
-      <!-- Schedule -->
-      {service.schedule && (
-        <div class="bg-neutral-50 border border-neutral-200 rounded-lg p-4 mb-8 flex items-start gap-3">
-          <svg 
-            class="w-6 h-6 text-teal-600 flex-shrink-0 mt-0.5" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <div>
-            <h2 class="font-semibold text-neutral-900 mb-1">When We're Here</h2>
-            <p class="text-neutral-700">{service.schedule}</p>
-          </div>
-        </div>
-      )}
-
-      <!-- Description -->
-      <div class="prose prose-lg max-w-none mb-8 text-neutral-700">
-        <div set:html={descriptionHtml} />
-      </div>
-
-      <!-- Call to Action -->
-      {service.callToAction?.phoneNumber && (
-        <div class="bg-teal-600 text-white rounded-lg p-8 mt-12">
-          <h2 class="text-2xl font-bold mb-3">
-            Ready to Get Started?
-          </h2>
-          <p class="text-teal-50 text-lg mb-6">
-            {service.callToAction.buttonText 
-              ? `${service.callToAction.buttonText}! We're here to help.`
-              : "We'd love to hear from you and answer any questions."}
-          </p>
-          <a
-            href={`tel:${service.callToAction.phoneNumber.replace(/\s/g, '')}`}
-            class="inline-flex items-center gap-2 bg-white text-teal-600 px-8 py-3 rounded-md font-bold text-lg hover:bg-teal-50 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-teal-600"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-            </svg>
-            <span>{service.callToAction.phoneNumber}</span>
-          </a>
-        </div>
-      )}
-
-      <!-- Back Link -->
-      <div class="mt-12 pt-8 border-t border-neutral-200">
-        <a
-          href="/"
-          class="inline-flex items-center gap-2 text-teal-600 hover:text-teal-700 font-medium focus:outline-none focus:ring-2 focus:ring-teal-600 rounded"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          <span>Back to all services</span>
-        </a>
-      </div>
+  <article>
+    <div class="max-w-7xl mx-auto">
+      <ServiceDetail service={service} featuredPostSlug={featuredPostSlug} client:load />
     </div>
   </article>
+
+  <!-- Sticky Contact Footer (Mobile) -->
+  <div class="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-slate-200 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 py-3">
+      <a
+        href="tel:01706123456"
+        class="w-full inline-flex items-center justify-center gap-2 bg-brand-accent text-white hover:bg-[#b86505] font-bold text-lg rounded-full px-6 py-3 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-accent focus:ring-offset-2 min-h-[48px]"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+        </svg>
+        Contact Us Now
+      </a>
+    </div>
+  </div>
+
+  <!-- Add padding to bottom of article to account for sticky footer on mobile -->
+  <style>
+    @media (max-width: 768px) {
+      article {
+        padding-bottom: 80px;
+      }
+    }
+  </style>
 </MainLayout>
 
-<style>
-  /* Enhance prose styling for rich text content */
-  .prose {
-    color: inherit;
-  }
-  
-  .prose p {
-    margin-bottom: 1rem;
-  }
-  
-  .prose strong {
-    font-weight: 600;
-    color: #171717;
-  }
-  
-  .prose a {
-    color: #26a1ab;
-    text-decoration: underline;
-  }
-  
-  .prose a:hover {
-    color: #1e8089;
-  }
-</style>
 

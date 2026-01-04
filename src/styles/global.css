@@ -1,1 +1,84 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 185 60% 40%; /* #26a1ab - brand teal */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 185 60% 40%; /* brand teal for focus rings */
+  }
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* Prose styling for accessible typography */
+.prose {
+  color: #475569; /* slate-700 */
+}
+
+.prose p {
+  margin-bottom: 1.5rem;
+  font-size: 1.125rem; /* text-lg */
+  line-height: 1.875; /* leading-relaxed - increased for better readability */
+}
+
+.prose h2 {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 700;
+  color: #0f172a; /* slate-900 */
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 700;
+  color: #0f172a; /* slate-900 */
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: #0f172a; /* slate-900 */
+}
+
+.prose a {
+  color: #26a1ab;
+  text-decoration: underline;
+}
+
+.prose a:hover {
+  color: #1b7a82;
+}
+
+.prose ul,
+.prose ol {
+  margin-bottom: 1.5rem;
+  margin-left: 1.5rem;
+}
+
+.prose ul li,
+.prose ol li {
+  font-size: 1.125rem; /* text-lg */
+  line-height: 1.875; /* leading-relaxed - increased for better readability */
+  margin-bottom: 0.5rem;
+}

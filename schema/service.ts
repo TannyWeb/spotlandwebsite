@@ -40,6 +40,15 @@ export const serviceSchema = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'mainImage',
+      title: 'Main Image',
+      type: 'image',
+      description: 'A welcoming image that represents this service',
+      options: {
+        hotspot: true,
+      },
+    }),
+    defineField({
       name: 'description',
       title: 'Service Description',
       type: 'array',
@@ -70,6 +79,13 @@ export const serviceSchema = defineType({
           placeholder: '0161 XXX XXXX',
         }),
         defineField({
+          name: 'email',
+          title: 'Email Address',
+          type: 'string',
+          description: 'Email address for this service (optional)',
+          placeholder: 'info@spotlandcommunity.org',
+        }),
+        defineField({
           name: 'buttonText',
           title: 'Button Text',
           type: 'string',
@@ -92,6 +108,66 @@ export const serviceSchema = defineType({
       description: 'Helpful information for people who might be nervous about visiting',
       rows: 4,
       placeholder: 'Example: No need to book, just turn up! We have a ramp at the side entrance and a friendly volunteer will meet you at the door.',
+    }),
+    defineField({
+      name: 'benefits',
+      title: 'Benefits',
+      type: 'array',
+      description: 'What benefits does this service provide?',
+      of: [
+        {
+          type: 'string',
+        },
+      ],
+    }),
+    defineField({
+      name: 'targetAudience',
+      title: 'Who It\'s For',
+      type: 'array',
+      description: 'Who is this service designed for?',
+      of: [
+        {
+          type: 'string',
+        },
+      ],
+    }),
+    defineField({
+      name: 'stats',
+      title: 'Impact Statistics',
+      type: 'array',
+      description: 'Key statistics that show the impact of this service',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'label',
+              title: 'Label',
+              type: 'string',
+              description: 'What does this stat represent? (e.g., "People Helped")',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'value',
+              title: 'Value',
+              type: 'string',
+              description: 'The statistic value (e.g., "500+", "95%", "50")',
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: {
+              label: 'label',
+              value: 'value',
+            },
+            prepare({ label, value }) {
+              return {
+                title: `${value} ${label}`,
+              };
+            },
+          },
+        },
+      ],
     }),
   ],
   preview: {

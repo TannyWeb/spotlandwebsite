@@ -1,5 +1,6 @@
 import { createClient } from '@sanity/client';
 import type { SanityClient } from '@sanity/client';
+import imageUrlBuilder from '@sanity/image-url';
 
 // Sanity client configuration
 // These values will come from environment variables (PUBLIC_ prefix for client-side access)
@@ -22,6 +23,14 @@ export const sanityClient: SanityClient = createClient({
   // Set to true for better performance with cached data
 });
 
+// Image URL builder for Sanity images
+const builder = imageUrlBuilder(sanityClient);
+
+// Helper function to generate optimized image URLs from Sanity
+export function urlFor(source: any) {
+  return builder.image(source);
+}
+
 // Helper function to fetch all services
 export async function getServices() {
   const query = `*[_type == "service"] | order(featured desc, _createdAt desc) {
@@ -29,6 +38,7 @@ export async function getServices() {
     title,
     slug,
     category,
+    mainImage,
     description,
     schedule,
     callToAction,
@@ -48,11 +58,15 @@ export async function getServiceBySlug(slug: string) {
     title,
     slug,
     category,
+    mainImage,
     description,
     schedule,
     callToAction,
     featured,
     goodToKnow,
+    benefits,
+    targetAudience,
+    stats,
     _createdAt,
     _updatedAt
   }`;
@@ -70,37 +84,56 @@ export async function getNavigation() {
   return await sanityClient.fetch(query);
 }
 
-// Helper function to fetch news items
-export async function getNewsItems(limit: number = 10) {
-  const query = `*[_type == "newsItem"] | order(_createdAt desc) [0...$limit] {
+// Helper function to fetch posts (latest posts, with featured first)
+export async function getPosts(limit: number = 10) {
+  // Query for posts: featured first, then by published date
+  const query = `*[_type == "post"] | order(featured desc, publishedAt desc) [0...$limit] {
     _id,
     title,
     slug,
-    excerpt,
-    content,
     publishedAt,
-    featuredImage,
+    mainImage,
+    body,
+    featured,
     _createdAt,
     _updatedAt
   }`;
   
-  return await sanityClient.fetch(query, { limit });
+  const results = await sanityClient.fetch(query, { limit });
+  console.log(`[getPosts] Query: _type == "post", limit: ${limit}`);
+  console.log(`[getPosts] Fetched ${results.length} posts from Sanity:`, results.map((p: any) => ({ title: p.title, featured: p.featured, publishedAt: p.publishedAt })));
+  return results;
 }
 
-// Helper function to fetch a single news item by slug
-export async function getNewsItemBySlug(slug: string) {
-  const query = `*[_type == "newsItem" && slug.current == $slug][0] {
+// Helper function to fetch a single post by slug
+export async function getPostBySlug(slug: string) {
+  const query = `*[_type == "post" && slug.current == $slug][0] {
     _id,
     title,
     slug,
-    excerpt,
-    content,
     publishedAt,
-    featuredImage,
+    mainImage,
+    body,
+    featured,
+    youtubeUrl,
+    showAccreditationBadge,
     _createdAt,
     _updatedAt
   }`;
   
   return await sanityClient.fetch(query, { slug });
+}
+
+// Helper function to fetch the featured post (for footer badge)
+export async function getFeaturedPost() {
+  const query = `*[_type == "post" && featured == true] | order(publishedAt desc) [0] {
+    _id,
+    title,
+    slug,
+    _createdAt,
+    _updatedAt
+  }`;
+  
+  return await sanityClient.fetch(query);
 }
 

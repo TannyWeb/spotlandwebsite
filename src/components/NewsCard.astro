@@ -1,0 +1,113 @@
+---
+import { urlFor } from '../lib/sanity';
+
+interface Props {
+  post: {
+    _id: string;
+    title: string;
+    slug: {
+      current: string;
+    } | string;
+    publishedAt: string;
+    mainImage?: any;
+    body?: any[];
+  };
+}
+
+const { post } = Astro.props;
+
+// Fallback placeholder image from Unsplash (community vibe)
+const placeholderImage = 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=800';
+
+// Get image URL - use Sanity image if available, otherwise use placeholder
+let imageUrl = placeholderImage;
+if (post.mainImage) {
+  try {
+    imageUrl = urlFor(post.mainImage).width(800).height(450).fit('crop').auto('format').url();
+  } catch (error) {
+    console.error('Error generating image URL:', error);
+    imageUrl = placeholderImage;
+  }
+}
+
+// Extract excerpt from body (first 100 characters of plain text)
+function extractExcerpt(body: any[]): string {
+  if (!body || !Array.isArray(body)) return '';
+  
+  let text = '';
+  for (const block of body) {
+    if (block._type === 'block' && block.children) {
+      for (const child of block.children) {
+        if (child.text) {
+          text += child.text + ' ';
+        }
+      }
+    }
+    if (text.length >= 100) break;
+  }
+  
+  const excerpt = text.trim().substring(0, 100);
+  return excerpt.length === 100 ? excerpt + '...' : excerpt;
+}
+
+const excerpt = extractExcerpt(post.body || []);
+
+// Format date for display
+const publishedDate = post.publishedAt 
+  ? new Date(post.publishedAt).toLocaleDateString('en-GB', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+  : '';
+
+// Get the slug value (handle both object and string formats)
+const slugValue = typeof post.slug === 'string' ? post.slug : post.slug.current;
+const postUrl = `/news/${slugValue}`;
+---
+
+<div class="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden transition-transform hover:-translate-y-1">
+  <article class="group focus-within:ring-2 focus-within:ring-brand-teal focus-within:ring-offset-2 flex flex-col h-full">
+    <!-- Image Container -->
+    <div class="aspect-video w-full overflow-hidden bg-slate-200 relative">
+      <img 
+        src={imageUrl}
+        alt={post.title}
+        class="w-full h-full object-cover transition-transform group-hover:scale-105"
+        loading="lazy"
+      />
+      <!-- Date Badge in Terracotta -->
+      {publishedDate && (
+        <div class="absolute top-4 right-4 bg-[#d97706] text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+          {publishedDate}
+        </div>
+      )}
+    </div>
+    
+    <div class="p-6 flex flex-col flex-grow">
+      <h3 class="text-slate-900 font-bold text-xl mb-3 leading-tight">
+        <a 
+          href={postUrl}
+          class="hover:text-brand-teal transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded"
+        >
+          {post.title}
+        </a>
+      </h3>
+      
+      {excerpt && (
+        <p class="text-slate-600 mb-4 text-base leading-relaxed flex-grow">
+          {excerpt}
+        </p>
+      )}
+      
+      <a
+        href={postUrl}
+        class="inline-block mt-auto text-brand-teal font-semibold hover:text-brand-dark transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded min-h-[44px] flex items-center"
+      >
+        Read more
+        <span aria-hidden="true" class="ml-2">→</span>
+      </a>
+    </div>
+  </article>
+</div>
+
