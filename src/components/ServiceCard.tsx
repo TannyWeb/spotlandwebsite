@@ -21,7 +21,9 @@ interface ServiceCardProps {
     }>
     featured?: boolean
   }
-  context?: 'running-now' | 'later-today' | 'tomorrow'
+  context?: 'running-now' | 'later-today' | 'tomorrow' | 'upcoming'
+  timeText?: string  // Custom time text like "10:00am" or "Until 2pm"
+  dayText?: string   // Day text like "Today", "Tomorrow", "Wednesday"
   colorClass?: 'blue' | 'teal' | 'purple' | 'orange' | 'green' | 'pink'
 }
 
@@ -36,7 +38,7 @@ const categoryLabels: Record<string, string> = {
 // Fallback placeholder image from Unsplash (community vibe)
 const placeholderImage = 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=800'
 
-export default function ServiceCard({ service, context, colorClass }: ServiceCardProps) {
+export default function ServiceCard({ service, context, timeText, dayText, colorClass }: ServiceCardProps) {
   // Get the slug value (handle both object and string formats)
   const slugValue = typeof service.slug === 'string' ? service.slug : service.slug.current
   const serviceUrl = `/services/${slugValue}`
@@ -52,52 +54,81 @@ export default function ServiceCard({ service, context, colorClass }: ServiceCar
     }
   }
 
-  // Get time badge info based on context
-  let timeBadge: { text: string; bgColor: string; textColor: string } | null = null
-  if (context && service.scheduleStructured) {
-    const currentDay = getCurrentDay()
-    const relevantSchedule = service.scheduleStructured.find(s =>
-      context === 'running-now' ? s.dayOfWeek === currentDay :
-      context === 'later-today' ? s.dayOfWeek === currentDay :
-      true // tomorrow
-    )
-
-    if (relevantSchedule) {
-      if (context === 'running-now') {
-        timeBadge = {
-          text: 'Running Now',
-          bgColor: 'bg-green-100',
-          textColor: 'text-green-800'
+  // Determine badge styling based on context
+  const getBadgeStyles = () => {
+    switch (context) {
+      case 'running-now':
+        return {
+          badge: 'bg-green-100 text-green-800 border-green-300',
+          card: 'ring-2 ring-green-400 ring-offset-2',
+          showPulse: true
         }
-      } else if (context === 'later-today') {
-        timeBadge = {
-          text: `Starts at ${formatTime(relevantSchedule.startTime)}`,
-          bgColor: 'bg-blue-100',
-          textColor: 'text-blue-800'
+      case 'later-today':
+        return {
+          badge: 'bg-teal-100 text-teal-800 border-teal-300',
+          card: '',
+          showPulse: false
         }
-      } else if (context === 'tomorrow') {
-        timeBadge = {
-          text: `Tomorrow at ${formatTime(relevantSchedule.startTime)}`,
-          bgColor: 'bg-purple-100',
-          textColor: 'text-purple-800'
+      case 'tomorrow':
+        return {
+          badge: 'bg-blue-100 text-blue-800 border-blue-300',
+          card: '',
+          showPulse: false
         }
-      }
+      case 'upcoming':
+        return {
+          badge: 'bg-slate-100 text-slate-700 border-slate-300',
+          card: '',
+          showPulse: false
+        }
+      default:
+        return null
     }
+  }
+
+  const badgeStyles = getBadgeStyles()
+
+  // Build badge text
+  const getBadgeText = () => {
+    if (context === 'running-now') {
+      return timeText ? `Now · ${timeText}` : 'Happening Now'
+    }
+    if (dayText && timeText) {
+      return `${dayText} · ${timeText}`
+    }
+    return dayText || timeText || ''
   }
 
   return (
     <Card className={cn(
-      "overflow-hidden transition-transform hover:-translate-y-1 hover:shadow-lg focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 rounded-3xl bg-white",
-      colorClass ? `service-card-${colorClass}` : 'border-t-4 border-[#26a1ab]'
+      "overflow-hidden transition-all hover:-translate-y-1 hover:shadow-lg focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 rounded-3xl bg-white",
+      colorClass ? `service-card-${colorClass}` : 'border-t-4 border-[#26a1ab]',
+      badgeStyles?.card
     )}>
-      {/* Image Container - Fixed aspect ratio for grid alignment */}
-      <div className="aspect-video w-full overflow-hidden bg-slate-200">
-        <img 
+      {/* Image Container with badge overlay */}
+      <div className="relative aspect-video w-full overflow-hidden bg-slate-200">
+        <img
           src={imageUrl}
           alt={service.title}
           className="w-full h-full object-cover"
           loading="lazy"
         />
+
+        {/* Time Badge - positioned on image */}
+        {badgeStyles && (
+          <div className={cn(
+            "absolute top-3 left-3 px-3 py-1.5 rounded-full text-sm font-semibold border inline-flex items-center gap-2",
+            badgeStyles.badge
+          )}>
+            {badgeStyles.showPulse && (
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+              </span>
+            )}
+            {getBadgeText()}
+          </div>
+        )}
       </div>
 
       <CardContent className="space-y-4 pt-6">

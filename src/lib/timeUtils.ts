@@ -142,7 +142,165 @@ export function getScheduleDisplayText(schedule: ServiceSchedule): string {
 }
 
 /**
+ * Get day name for display
+ */
+function getDayName(day: DayOfWeek): string {
+  const dayNames: Record<DayOfWeek, string> = {
+    monday: 'Monday',
+    tuesday: 'Tuesday',
+    wednesday: 'Wednesday',
+    thursday: 'Thursday',
+    friday: 'Friday',
+    saturday: 'Saturday',
+    sunday: 'Sunday'
+  };
+  return dayNames[day];
+}
+
+/**
+ * Get services for a specific day, sorted by start time
+ */
+function getServicesForDay(services: ServiceWithSchedule[], day: DayOfWeek): Array<{
+  service: ServiceWithSchedule;
+  schedule: ServiceSchedule;
+}> {
+  const results: Array<{ service: ServiceWithSchedule; schedule: ServiceSchedule }> = [];
+
+  for (const service of services) {
+    if (!service.scheduleStructured) continue;
+
+    for (const schedule of service.scheduleStructured) {
+      if (schedule.dayOfWeek === day) {
+        results.push({ service, schedule });
+      }
+    }
+  }
+
+  // Sort by start time
+  return results.sort((a, b) =>
+    timeToMinutes(a.schedule.startTime) - timeToMinutes(b.schedule.startTime)
+  );
+}
+
+/**
+ * Get MULTIPLE upcoming services (for "What's On" section)
+ * Returns up to `count` services with their status and time info
+ */
+export function getUpcomingServices(services: ServiceWithSchedule[], count: number = 3): Array<{
+  service: ServiceWithSchedule;
+  status: 'running-now' | 'later-today' | 'tomorrow' | 'upcoming';
+  timeText: string;
+  dayText: string;
+  schedule: ServiceSchedule;
+}> {
+  const results: Array<{
+    service: ServiceWithSchedule;
+    status: 'running-now' | 'later-today' | 'tomorrow' | 'upcoming';
+    timeText: string;
+    dayText: string;
+    schedule: ServiceSchedule;
+  }> = [];
+
+  const scheduledServices = services.filter(
+    s => s.scheduleStructured && s.scheduleStructured.length > 0
+  );
+
+  if (scheduledServices.length === 0) return results;
+
+  const currentDay = getCurrentDay();
+  const currentTime = getCurrentTimeInMinutes();
+  const days: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+  // Track which service+schedule combos we've added to avoid duplicates
+  const addedKeys = new Set<string>();
+
+  // 1. Check for services running NOW
+  for (const service of scheduledServices) {
+    if (results.length >= count) break;
+
+    for (const schedule of service.scheduleStructured!) {
+      if (schedule.dayOfWeek !== currentDay) continue;
+
+      const startTime = timeToMinutes(schedule.startTime);
+      const endTime = timeToMinutes(schedule.endTime);
+
+      if (currentTime >= startTime && currentTime <= endTime) {
+        const key = `${service._id}-${schedule.dayOfWeek}-${schedule.startTime}`;
+        if (!addedKeys.has(key)) {
+          addedKeys.add(key);
+          results.push({
+            service,
+            status: 'running-now',
+            timeText: `Until ${formatTime(schedule.endTime)}`,
+            dayText: 'Now',
+            schedule
+          });
+        }
+        break;
+      }
+    }
+  }
+
+  // 2. Check for services LATER TODAY
+  if (results.length < count) {
+    const todayServices = getServicesForDay(scheduledServices, currentDay);
+
+    for (const { service, schedule } of todayServices) {
+      if (results.length >= count) break;
+
+      const startTime = timeToMinutes(schedule.startTime);
+      if (startTime > currentTime) {
+        const key = `${service._id}-${schedule.dayOfWeek}-${schedule.startTime}`;
+        if (!addedKeys.has(key)) {
+          addedKeys.add(key);
+          results.push({
+            service,
+            status: 'later-today',
+            timeText: formatTime(schedule.startTime),
+            dayText: 'Today',
+            schedule
+          });
+        }
+      }
+    }
+  }
+
+  // 3. Check FUTURE DAYS (tomorrow and beyond)
+  if (results.length < count) {
+    const currentDayIndex = days.indexOf(currentDay);
+
+    // Loop through the next 7 days
+    for (let i = 1; i <= 7 && results.length < count; i++) {
+      const dayIndex = (currentDayIndex + i) % 7;
+      const day = days[dayIndex];
+      const isTomorrow = i === 1;
+
+      const dayServices = getServicesForDay(scheduledServices, day);
+
+      for (const { service, schedule } of dayServices) {
+        if (results.length >= count) break;
+
+        const key = `${service._id}-${schedule.dayOfWeek}-${schedule.startTime}`;
+        if (!addedKeys.has(key)) {
+          addedKeys.add(key);
+          results.push({
+            service,
+            status: isTomorrow ? 'tomorrow' : 'upcoming',
+            timeText: formatTime(schedule.startTime),
+            dayText: isTomorrow ? 'Tomorrow' : getDayName(day),
+            schedule
+          });
+        }
+      }
+    }
+  }
+
+  return results;
+}
+
+/**
  * Get the SINGLE next upcoming service (current, later today, or tomorrow)
+ * @deprecated Use getUpcomingServices() for the What's On section
  */
 export function getNextUpcomingService(services: ServiceWithSchedule[]): {
   service: ServiceWithSchedule | null;

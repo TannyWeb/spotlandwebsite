@@ -1,96 +1,99 @@
 ---
 import ServiceCard from './ServiceCard';
-import { getNextUpcomingService } from '../lib/timeUtils';
+import { getUpcomingServices, getCurrentDay } from '../lib/timeUtils';
 
 interface Props {
   services: any[];
 }
 
 const { services } = Astro.props;
-const { service, context, timeText } = getNextUpcomingService(services);
+const upcomingServices = getUpcomingServices(services, 3);
+
+// Check if anything is running now for the subtitle
+const hasRunningNow = upcomingServices.some(s => s.status === 'running-now');
+const hasScheduledServices = upcomingServices.length > 0;
+
+// Get current day name for context indicator
+const dayNames: Record<string, string> = {
+  monday: 'Monday',
+  tuesday: 'Tuesday',
+  wednesday: 'Wednesday',
+  thursday: 'Thursday',
+  friday: 'Friday',
+  saturday: 'Saturday',
+  sunday: 'Sunday'
+};
+const todayName = dayNames[getCurrentDay()];
 ---
 
 <section
-  class="py-16 bg-gradient-to-br from-teal-50 to-white -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 border-y-4 border-brand-teal"
+  class="py-16 bg-gradient-to-br from-teal-50 to-white px-4 sm:px-6 lg:px-8 border-y-4 border-teal-600"
   aria-labelledby="whats-on-heading"
 >
   <div class="max-w-7xl mx-auto">
+    <!-- Header -->
     <div class="text-center mb-12">
-      {context === 'running-now' && (
-        <>
-          <div class="inline-flex items-center gap-2 mb-4 bg-green-100 border-2 border-green-600 text-green-800 px-5 py-2.5 rounded-full text-lg font-bold">
-            <span class="relative flex h-3 w-3">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-            </span>
-            <span>Happening Now</span>
-          </div>
-          <h2 id="whats-on-heading" class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            What's On
-          </h2>
-          <p class="text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed">
-            <strong class="text-brand-teal">{service!.title}</strong> is running right now. Drop in and join us!
-          </p>
-        </>
-      )}
+      <!-- Context indicator -->
+      <div class="inline-flex items-center gap-2 mb-3 text-teal-700 text-sm font-medium bg-teal-50 px-4 py-1.5 rounded-full border border-teal-200">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Today is {todayName}</span>
+      </div>
 
-      {context === 'later-today' && (
-        <>
-          <h2 id="whats-on-heading" class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            What's On
-          </h2>
-          <p class="text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed">
-            Next up is <strong class="text-brand-teal">{service!.title}</strong> at {timeText.split(' at ')[1]}
-          </p>
-        </>
-      )}
+      <h2 id="whats-on-heading" class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+        What's On
+      </h2>
 
-      {context === 'tomorrow' && (
-        <>
-          <h2 id="whats-on-heading" class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            What's On
-          </h2>
-          <p class="text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed">
-            Next up is <strong class="text-brand-teal">{service!.title}</strong> {timeText}
-          </p>
-          <p class="text-lg text-slate-600 mt-2">
-            We're closed for the rest of today. See you tomorrow!
-          </p>
-        </>
-      )}
-
-      {context === 'none' && (
-        <>
-          <h2 id="whats-on-heading" class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            Our Services
-          </h2>
-          <p class="text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed">
-            Free, friendly support for everyone in our community.
-          </p>
-        </>
+      {hasRunningNow ? (
+        <p class="text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed">
+          Drop in now or see what's coming up this week
+        </p>
+      ) : hasScheduledServices ? (
+        <p class="text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed">
+          See what's happening today and this week
+        </p>
+      ) : (
+        <p class="text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed">
+          Free, friendly support for everyone in our community
+        </p>
       )}
     </div>
 
-    {service && (
-      <div class="flex justify-center mb-8">
-        <div class="max-w-md w-full">
-          <ServiceCard service={service} context={context} client:load />
-        </div>
+    <!-- Service Cards Grid - Always 3 cards -->
+    {hasScheduledServices ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        {upcomingServices.map((item) => (
+          <ServiceCard
+            service={item.service}
+            context={item.status}
+            timeText={item.timeText}
+            dayText={item.dayText}
+            client:load
+          />
+        ))}
       </div>
-    )}
-
-    {context === 'none' && services.length > 0 && (
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    ) : services.length > 0 ? (
+      <!-- Fallback: Show first 3 services without time context -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         {services.slice(0, 3).map((s: any) => (
           <ServiceCard service={s} client:load />
         ))}
       </div>
+    ) : (
+      <!-- No services at all -->
+      <div class="text-center py-12 bg-white rounded-3xl shadow-sm mb-10">
+        <p class="text-slate-600 text-lg">
+          Check back soon for our upcoming services and events.
+        </p>
+      </div>
     )}
 
-    <div class="text-center mt-10">
+    <!-- CTA Button -->
+    <div class="text-center">
       <a
         href="/services"
-        class="bg-brand-teal hover:bg-teal-700 text-white font-semibold px-8 py-3.5 rounded-full transition-colors inline-flex items-center min-h-[44px] text-lg shadow-sm"
+        class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-8 py-3.5 rounded-full transition-colors inline-flex items-center min-h-[44px] text-lg shadow-sm"
       >
         View All Services
       </a>
