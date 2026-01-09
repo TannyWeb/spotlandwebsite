@@ -1,0 +1,54 @@
+---
+interface Props {
+  position?: 'top' | 'bottom';
+  fill?: string;
+}
+
+const { position = 'bottom', fill = 'white' } = Astro.props;
+---
+
+{position === 'bottom' ? (
+  <div class="wave-divider-bottom">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,0 C150,100 350,0 600,50 C850,100 1050,0 1200,50 L1200,120 L0,120 Z" fill={fill}></path>
+    </svg>
+  </div>
+) : (
+  <div class="wave-divider-top">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,120 C150,20 350,120 600,70 C850,20 1050,120 1200,70 L1200,0 L0,0 Z" fill={fill}></path>
+    </svg>
+  </div>
+)}
+
+<style>
+  .wave-divider-bottom,
+  .wave-divider-top {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+  }
+
+  .wave-divider-bottom svg,
+  .wave-divider-top svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 60px;
+  }
+
+  @media (min-width: 768px) {
+    .wave-divider-bottom svg,
+    .wave-divider-top svg {
+      height: 80px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .wave-divider-bottom svg,
+    .wave-divider-top svg {
+      height: 100px;
+    }
+  }
+</style>

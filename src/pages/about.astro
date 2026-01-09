@@ -1,0 +1,125 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getAboutPageContent, getTeamMembers, getPartners, getAllPosts } from '../lib/sanity';
+import { urlFor } from '../lib/sanity';
+import PortableText from '../components/PortableText';
+import TeamMemberCard from '../components/TeamMemberCard.astro';
+import PartnerLogo from '../components/PartnerLogo.astro';
+import NewsCard from '../components/NewsCard.astro';
+import AccreditationBadge from '../components/AccreditationBadge.astro';
+
+// Fetch all data
+let aboutContent = null;
+let team = [];
+let partners = [];
+let posts = [];
+
+try {
+  aboutContent = await getAboutPageContent();
+  team = await getTeamMembers();
+  partners = await getPartners();
+  posts = await getAllPosts();
+} catch (error) {
+  console.error('Error fetching about page data:', error);
+}
+---
+
+<MainLayout title="About Spotland Community Centre">
+  <!-- Our Story Section -->
+  <section class="py-12 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-4xl font-bold text-slate-900 mb-8">
+        {aboutContent?.title || 'About Spotland Community Centre'}
+      </h1>
+
+      {aboutContent?.ourStoryImage && (
+        <div class="mb-8 rounded-3xl overflow-hidden shadow-lg border-4 border-brand-teal">
+          <img
+            src={urlFor(aboutContent.ourStoryImage).width(1200).auto('format').url()}
+            alt="Spotland Community Centre"
+            class="w-full h-auto"
+            loading="eager"
+          />
+        </div>
+      )}
+
+      {aboutContent?.ourStory && (
+        <div class="prose prose-lg max-w-none">
+          <PortableText value={aboutContent.ourStory} client:load />
+        </div>
+      )}
+
+      {!aboutContent && (
+        <div class="bg-teal-50 border-l-4 border-brand-teal p-6 rounded-r-lg">
+          <p class="text-lg text-slate-700">
+            Welcome to Spotland Community Centre, your local hub in Rochdale. We're here to support our community with free, friendly services for everyone.
+          </p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Our Team Section -->
+  {(aboutContent?.showTeam !== false) && team.length > 0 && (
+    <section class="py-12 bg-teal-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold text-slate-900 mb-2">Our Team</h2>
+        <p class="text-lg text-slate-700 mb-8 max-w-2xl">
+          Meet the friendly people who make Spotland Community Centre what it is.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {team.map((member: any) => (
+            <TeamMemberCard member={member} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Community Partners Section -->
+  {(aboutContent?.showPartners !== false) && partners.length > 0 && (
+    <section class="py-12 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold text-slate-900 mb-2">Our Partners</h2>
+        <p class="text-lg text-slate-700 mb-8 max-w-2xl">
+          We work with amazing organisations to bring the best support to our community.
+        </p>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {partners.map((partner: any) => (
+            <PartnerLogo partner={partner} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Quality & Accreditation -->
+  <section class="py-12 bg-gradient-to-br from-amber-50 to-teal-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-slate-900 mb-4">Quality You Can Trust</h2>
+      <p class="text-lg text-slate-700 mb-8 max-w-2xl mx-auto">
+        We're proud to be recognized for the quality of our services.
+      </p>
+      <AccreditationBadge variant="large" client:load />
+    </div>
+  </section>
+
+  <!-- News & Updates Section -->
+  {posts.length > 0 && (
+    <section class="py-12 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold text-slate-900 mb-2 border-b-2 border-brand-teal pb-2 inline-block">
+          News & Updates
+        </h2>
+        <p class="text-lg text-slate-700 mb-8 mt-4 max-w-2xl">
+          Stay up to date with the latest from Spotland Community Centre.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {posts.map((post: any) => (
+            <NewsCard post={post} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</MainLayout>

@@ -1,0 +1,53 @@
+---
+import { urlFor } from '../lib/sanity';
+
+interface Props {
+  member: {
+    _id: string;
+    name: string;
+    role: string;
+    photo?: any;
+    bio?: string;
+  };
+}
+
+const { member } = Astro.props;
+
+// Get photo URL if available
+let photoUrl = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400&h=400';
+if (member.photo) {
+  try {
+    photoUrl = urlFor(member.photo).width(400).height(400).fit('crop').auto('format').url();
+  } catch (error) {
+    console.error('Error generating photo URL:', error);
+  }
+}
+---
+
+<div class="group">
+  <!-- Card with photo and gradient overlay -->
+  <div class="relative aspect-[3/4] w-full overflow-hidden rounded-2xl mb-4 bg-slate-200 shadow-md hover:shadow-xl transition-shadow">
+    <img
+      src={photoUrl}
+      alt={member.name}
+      class="w-full h-full object-cover"
+      loading="lazy"
+    />
+    <!-- Gradient overlay with name and role -->
+    <div class="absolute inset-0 team-card-overlay flex flex-col justify-end p-6">
+      <h3 class="text-xl font-bold text-white mb-1">
+        {member.name}
+      </h3>
+      <p class="text-white/90 font-medium text-base">
+        {member.role}
+      </p>
+    </div>
+  </div>
+
+  <!-- Bio text below card -->
+  {member.bio && (
+    <p class="text-slate-700 leading-relaxed text-base px-2">
+      {member.bio}
+    </p>
+  )}
+</div>

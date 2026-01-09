@@ -34,22 +34,22 @@ const featuredPostSlug = featuredPost?.slug?.current || featuredPost?.slug || nu
   description={`Learn about our ${service.title} service at Spotland Community Centre.`}
 >
   <!-- Breadcrumb Navigation -->
-  <nav aria-label="Breadcrumb" class="bg-slate-100 py-3 -mx-4 px-4 mb-8">
-    <ol class="flex items-center gap-2 text-sm">
+  <nav aria-label="Breadcrumb" class="bg-slate-100 py-4 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 mb-8 rounded-lg">
+    <ol class="flex items-center gap-2 text-base">
       <li>
-        <a href="/" class="text-brand-teal hover:text-brand-dark hover:underline focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded">
+        <a href="/" class="text-brand-teal hover:text-brand-dark hover:underline focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded px-2 py-2 inline-flex items-center min-h-[44px]">
           Home
         </a>
       </li>
-      <li aria-hidden="true" class="text-slate-400">/</li>
+      <li aria-hidden="true" class="text-slate-400 text-lg">/</li>
       <li>
-        <a href="/services" class="text-brand-teal hover:text-brand-dark hover:underline focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded">
+        <a href="/services" class="text-brand-teal hover:text-brand-dark hover:underline focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded px-2 py-2 inline-flex items-center min-h-[44px]">
           Services
         </a>
       </li>
-      <li aria-hidden="true" class="text-slate-400">/</li>
+      <li aria-hidden="true" class="text-slate-400 text-lg">/</li>
       <li>
-        <span class="text-slate-900 font-medium">{service.title}</span>
+        <span class="text-slate-900 font-medium px-2 py-2 inline-flex items-center">{service.title}</span>
       </li>
     </ol>
   </nav>

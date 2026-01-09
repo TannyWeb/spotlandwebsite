@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { urlFor } from "@/lib/sanity"
 import { cn } from "@/lib/utils"
+import { getCurrentDay, formatTime } from "@/lib/timeUtils"
 
 interface ServiceCardProps {
   service: {
@@ -13,8 +14,15 @@ interface ServiceCardProps {
     category: string
     mainImage?: any
     schedule?: string
+    scheduleStructured?: Array<{
+      dayOfWeek: string
+      startTime: string
+      endTime: string
+    }>
     featured?: boolean
   }
+  context?: 'running-now' | 'later-today' | 'tomorrow'
+  colorClass?: 'blue' | 'teal' | 'purple' | 'orange' | 'green' | 'pink'
 }
 
 // Category display names
@@ -28,7 +36,7 @@ const categoryLabels: Record<string, string> = {
 // Fallback placeholder image from Unsplash (community vibe)
 const placeholderImage = 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=800'
 
-export default function ServiceCard({ service }: ServiceCardProps) {
+export default function ServiceCard({ service, context, colorClass }: ServiceCardProps) {
   // Get the slug value (handle both object and string formats)
   const slugValue = typeof service.slug === 'string' ? service.slug : service.slug.current
   const serviceUrl = `/services/${slugValue}`
@@ -44,8 +52,44 @@ export default function ServiceCard({ service }: ServiceCardProps) {
     }
   }
 
+  // Get time badge info based on context
+  let timeBadge: { text: string; bgColor: string; textColor: string } | null = null
+  if (context && service.scheduleStructured) {
+    const currentDay = getCurrentDay()
+    const relevantSchedule = service.scheduleStructured.find(s =>
+      context === 'running-now' ? s.dayOfWeek === currentDay :
+      context === 'later-today' ? s.dayOfWeek === currentDay :
+      true // tomorrow
+    )
+
+    if (relevantSchedule) {
+      if (context === 'running-now') {
+        timeBadge = {
+          text: 'Running Now',
+          bgColor: 'bg-green-100',
+          textColor: 'text-green-800'
+        }
+      } else if (context === 'later-today') {
+        timeBadge = {
+          text: `Starts at ${formatTime(relevantSchedule.startTime)}`,
+          bgColor: 'bg-blue-100',
+          textColor: 'text-blue-800'
+        }
+      } else if (context === 'tomorrow') {
+        timeBadge = {
+          text: `Tomorrow at ${formatTime(relevantSchedule.startTime)}`,
+          bgColor: 'bg-purple-100',
+          textColor: 'text-purple-800'
+        }
+      }
+    }
+  }
+
   return (
-    <Card className="overflow-hidden border-t-4 border-[#26a1ab] transition-transform hover:-translate-y-1 hover:shadow-lg focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2">
+    <Card className={cn(
+      "overflow-hidden transition-transform hover:-translate-y-1 hover:shadow-lg focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 rounded-3xl bg-white",
+      colorClass ? `service-card-${colorClass}` : 'border-t-4 border-[#26a1ab]'
+    )}>
       {/* Image Container - Fixed aspect ratio for grid alignment */}
       <div className="aspect-video w-full overflow-hidden bg-slate-200">
         <img 
@@ -56,18 +100,18 @@ export default function ServiceCard({ service }: ServiceCardProps) {
         />
       </div>
 
-      <CardHeader className="pb-3">
-        <Badge 
-          variant="secondary" 
-          className="w-fit bg-teal-100 text-[#1b7a82] border-0 mb-2 text-base px-4 py-2 min-h-[44px]"
-        >
-          {categoryLabels[service.category] || service.category}
-        </Badge>
-      </CardHeader>
+      <CardContent className="space-y-4 pt-6">
+        {/* Icon with color-matched background */}
+        {colorClass && (
+          <div className="service-icon-bg w-16 h-16 rounded-2xl flex items-center justify-center mb-4">
+            <svg className="service-icon w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+        )}
 
-      <CardContent className="space-y-4">
-        <h3 className="text-slate-900 font-bold text-xl leading-tight">
-          <a 
+        <h3 className="text-slate-900 font-bold text-2xl leading-tight">
+          <a
             href={serviceUrl}
             className="hover:text-[#26a1ab] transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded min-h-[44px] min-w-[44px] inline-flex items-center"
           >
@@ -75,18 +119,15 @@ export default function ServiceCard({ service }: ServiceCardProps) {
           </a>
         </h3>
 
-        {service.schedule && (
-          <p className="text-slate-600 text-base flex items-start gap-2">
-            <span className="text-lg flex-shrink-0" aria-hidden="true">🕐</span>
-            <span>{service.schedule}</span>
-          </p>
-        )}
+        <p className="text-slate-600 text-lg leading-relaxed line-clamp-2">
+          {categoryLabels[service.category] || service.category}
+        </p>
 
         <a
           href={serviceUrl}
-          className="inline-block bg-[#26a1ab] text-white px-8 py-3 rounded-md font-bold text-lg hover:bg-[#1b7a82] transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 min-h-[48px] min-w-[120px] flex items-center justify-center"
+          className="inline-flex items-center text-[#26a1ab] font-semibold text-lg hover:text-[#1b7a82] transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded min-h-[44px]"
         >
-          Learn more
+          Learn more →
         </a>
       </CardContent>
     </Card>

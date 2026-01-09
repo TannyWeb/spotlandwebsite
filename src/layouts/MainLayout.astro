@@ -54,96 +54,104 @@ const featuredPostUrl = featuredPostSlug ? `/news/${featuredPostSlug}` : null;
     <!-- Sticky Header -->
     <header class="sticky top-0 z-40 bg-white border-b border-neutral-200 shadow-sm" role="banner">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav class="flex items-center justify-between h-16" role="navigation" aria-label="Main navigation">
-          <a 
-            href="/" 
-            class="text-2xl font-bold text-slate-900 hover:text-brand-teal transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded"
+        <nav class="flex items-center justify-between py-4" role="navigation" aria-label="Main navigation">
+          <a
+            href="/"
+            class="text-xl md:text-2xl font-bold text-slate-900 hover:text-brand-teal transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded py-2 px-1 inline-flex items-center min-h-[44px]"
           >
-            Spotland Community Hub
+            Spotland Community Centre
           </a>
-          
-          {menuItems.length > 0 && (
-            <ul class="flex gap-6">
-              {menuItems.map((item: any) => (
+
+          <div class="flex items-center gap-6">
+            {menuItems.length > 0 && (
+              <ul class="hidden md:flex gap-1">
+                {menuItems.map((item: any) => (
+                  <li>
+                    <a
+                      href={item.link}
+                      class="text-base text-neutral-700 hover:text-brand-teal font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded px-4 py-2.5 inline-flex items-center min-h-[44px]"
+                      target={item.openInNewTab ? '_blank' : undefined}
+                      rel={item.openInNewTab ? 'noopener noreferrer' : undefined}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
                 <li>
                   <a
-                    href={item.link}
-                    class="text-neutral-700 hover:text-brand-teal font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded px-2 py-1"
-                    target={item.openInNewTab ? '_blank' : undefined}
-                    rel={item.openInNewTab ? 'noopener noreferrer' : undefined}
+                    href="tel:01706568810"
+                    class="text-base text-neutral-700 hover:text-brand-teal font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded px-4 py-2.5 inline-flex items-center min-h-[44px]"
                   >
-                    {item.label}
+                    Contact Us
                   </a>
                 </li>
-              ))}
-            </ul>
-          )}
+              </ul>
+            )}
+          </div>
         </nav>
       </div>
     </header>
 
     <!-- Main Content -->
     <main id="main-content" class="flex-grow" role="main">
-      <div class="max-w-7xl mx-auto px-4 py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <slot />
       </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 py-10 text-white mt-12" role="contentinfo">
+    <footer class="bg-slate-900 py-16 text-white mt-auto" role="contentinfo">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-          <h2 class="text-xl font-bold text-white mb-3">Spotland Community Hub</h2>
-          <p class="mb-4">
-            {footerInfo.tagline || 'Your friendly neighbourhood hub'}
+          <h2 class="text-2xl md:text-3xl font-bold !text-white mb-3">Spotland Community Association</h2>
+          <p class="text-base md:text-lg mb-8 text-slate-300">
+            Registered Charity | Serving the community since 1996
           </p>
-          {footerInfo.contactInfo?.address ? (
-            <p class="mb-4 whitespace-pre-line">{footerInfo.contactInfo.address}</p>
-          ) : (
-            <p class="mb-4">
-              123 Community Street<br />
-              Spotland, Manchester<br />
-              M12 4AB
-            </p>
-          )}
-          
-          {footerInfo.contactInfo && (
-            <div class="space-y-2">
-              {footerInfo.contactInfo.phone && (
-                <p>
-                  <span class="font-medium">Phone:</span>{' '}
-                  <a
-                    href={`tel:${footerInfo.contactInfo.phone.replace(/\s/g, '')}`}
-                    class="text-teal-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 focus:ring-offset-slate-900 rounded"
-                  >
-                    {footerInfo.contactInfo.phone}
-                  </a>
-                </p>
-              )}
-              {footerInfo.contactInfo.email && (
-                <p>
-                  <span class="font-medium">Email:</span>{' '}
-                  <a
-                    href={`mailto:${footerInfo.contactInfo.email}`}
-                    class="text-teal-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 focus:ring-offset-slate-900 rounded"
-                  >
-                    {footerInfo.contactInfo.email}
-                  </a>
-                </p>
-              )}
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left md:text-center mb-12">
+            <div>
+              <h3 class="text-lg font-semibold text-white mb-3">Contact</h3>
+              <p class="text-slate-300 text-base mb-2">Spotland Community Centre</p>
+              <p class="text-slate-300 text-base mb-2">Spotland Road, Rochdale</p>
+              <p class="text-slate-300 text-base">OL12 6PJ</p>
             </div>
-          )}
-        </div>
-        
-        <!-- Accreditation Badge -->
-        {featuredPostSlug && (
-          <div class="mt-8 pt-6 border-t border-slate-800 text-center">
-            <AccreditationBadge postSlug={featuredPostSlug} variant="compact" />
+
+            <div>
+              <h3 class="text-lg font-semibold text-white mb-3">Get In Touch</h3>
+              <p class="mb-2">
+                <a
+                  href="tel:01706568810"
+                  class="text-teal-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 focus:ring-offset-slate-900 rounded px-2 py-1 inline-flex items-center min-h-[44px] text-base"
+                >
+                  01706 568810
+                </a>
+              </p>
+              <p>
+                <a
+                  href="mailto:info@spotlandcommunity.org"
+                  class="text-teal-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 focus:ring-offset-slate-900 rounded px-2 py-1 inline-flex items-center min-h-[44px] text-base break-all"
+                >
+                  info@spotlandcommunity.org
+                </a>
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-lg font-semibold text-white mb-3">Opening Hours</h3>
+              <p class="text-slate-300 text-base mb-1">Monday - Friday: 9:00 AM - 4:00 PM</p>
+              <p class="text-slate-300 text-base mb-1">Saturday: 10:00 AM - 2:00 PM</p>
+              <p class="text-slate-300 text-base">Sunday: Closed</p>
+            </div>
           </div>
-        )}
-        
-        <div class="mt-6 text-center text-sm">
-          <p>Built for Spotland &copy; {new Date().getFullYear()}</p>
+        </div>
+
+        <div class="border-t border-slate-800 pt-8 text-center">
+          <p class="text-base text-slate-400 mb-2">
+            Made with <span class="text-red-400">❤️</span> for our community
+          </p>
+          <p class="text-sm text-slate-500">
+            &copy; {new Date().getFullYear()} Spotland Community Association. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
@@ -151,8 +159,14 @@ const featuredPostUrl = featuredPostSlug ? `/news/${featuredPostSlug}` : null;
 </html>
 
 <style is:global>
-  /* Import Inter font */
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  /* Import Outfit and Inter fonts */
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+  /* Apply Outfit to all headings */
+  h1, h2, h3, h4, h5, h6,
+  .heading-1, .heading-2, .heading-3, .heading-4 {
+    font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
   
   /* Custom teal color for Tailwind */
   :root {

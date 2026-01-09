@@ -41,13 +41,14 @@ export async function getServices() {
     mainImage,
     description,
     schedule,
+    scheduleStructured,
     callToAction,
     featured,
     goodToKnow,
     _createdAt,
     _updatedAt
   }`;
-  
+
   return await sanityClient.fetch(query);
 }
 
@@ -61,6 +62,7 @@ export async function getServiceBySlug(slug: string) {
     mainImage,
     description,
     schedule,
+    scheduleStructured,
     callToAction,
     featured,
     goodToKnow,
@@ -70,7 +72,7 @@ export async function getServiceBySlug(slug: string) {
     _createdAt,
     _updatedAt
   }`;
-  
+
   return await sanityClient.fetch(query, { slug });
 }
 
@@ -133,7 +135,62 @@ export async function getFeaturedPost() {
     _createdAt,
     _updatedAt
   }`;
-  
+
+  return await sanityClient.fetch(query);
+}
+
+// Helper function to fetch about page content
+export async function getAboutPageContent() {
+  const query = `*[_type == "aboutPage"][0] {
+    title,
+    ourStory,
+    ourStoryImage,
+    showTeam,
+    showPartners
+  }`;
+
+  return await sanityClient.fetch(query);
+}
+
+// Helper function to fetch team members
+export async function getTeamMembers() {
+  const query = `*[_type == "teamMember"] | order(order asc, name asc) {
+    _id,
+    name,
+    role,
+    photo,
+    bio
+  }`;
+
+  return await sanityClient.fetch(query);
+}
+
+// Helper function to fetch partners
+export async function getPartners() {
+  const query = `*[_type == "partner"] | order(order asc, name asc) {
+    _id,
+    name,
+    logo,
+    description,
+    website,
+    partnershipType
+  }`;
+
+  return await sanityClient.fetch(query);
+}
+
+// Helper function to fetch all posts (for about page)
+export async function getAllPosts() {
+  const query = `*[_type == "post"] | order(featured desc, publishedAt desc) {
+    _id,
+    title,
+    slug,
+    publishedAt,
+    mainImage,
+    body,
+    featured
+  }`;
+
   return await sanityClient.fetch(query);
 }
 

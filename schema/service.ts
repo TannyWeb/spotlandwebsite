@@ -67,6 +67,58 @@ export const serviceSchema = defineType({
       description: 'When is this service available? (e.g., "Tuesdays and Thursdays, 10am-2pm")',
     }),
     defineField({
+      name: 'scheduleStructured',
+      title: 'Schedule (Time-based)',
+      type: 'array',
+      description: 'When is this service running? Add one entry for each time slot.',
+      of: [{
+        type: 'object',
+        fields: [
+          defineField({
+            name: 'dayOfWeek',
+            title: 'Day of Week',
+            type: 'string',
+            options: {
+              list: [
+                { title: 'Monday', value: 'monday' },
+                { title: 'Tuesday', value: 'tuesday' },
+                { title: 'Wednesday', value: 'wednesday' },
+                { title: 'Thursday', value: 'thursday' },
+                { title: 'Friday', value: 'friday' },
+                { title: 'Saturday', value: 'saturday' },
+                { title: 'Sunday', value: 'sunday' },
+              ],
+              layout: 'dropdown',
+            },
+            validation: (Rule) => Rule.required(),
+          }),
+          defineField({
+            name: 'startTime',
+            title: 'Start Time',
+            type: 'string',
+            description: 'When does this service start? (24-hour format: HH:MM)',
+            placeholder: '10:00',
+            validation: (Rule) => Rule.required().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).error('Must be in HH:MM format'),
+          }),
+          defineField({
+            name: 'endTime',
+            title: 'End Time',
+            type: 'string',
+            description: 'When does this service end? (24-hour format: HH:MM)',
+            placeholder: '12:00',
+            validation: (Rule) => Rule.required().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).error('Must be in HH:MM format'),
+          }),
+        ],
+        preview: {
+          select: { day: 'dayOfWeek', start: 'startTime', end: 'endTime' },
+          prepare({ day, start, end }) {
+            const dayLabels = { monday: 'Monday', tuesday: 'Tuesday', wednesday: 'Wednesday', thursday: 'Thursday', friday: 'Friday', saturday: 'Saturday', sunday: 'Sunday' };
+            return { title: `${dayLabels[day] || day}: ${start} - ${end}` };
+          },
+        },
+      }],
+    }),
+    defineField({
       name: 'callToAction',
       title: 'Get in Touch',
       type: 'object',

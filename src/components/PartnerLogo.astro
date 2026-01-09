@@ -1,0 +1,103 @@
+---
+import { urlFor } from '../lib/sanity';
+
+interface Props {
+  partner: {
+    _id: string;
+    name: string;
+    logo?: any;
+    description?: string;
+    website?: string;
+    partnershipType?: string;
+  };
+}
+
+const { partner } = Astro.props;
+
+// Get logo URL if available
+let logoUrl = null;
+if (partner.logo) {
+  try {
+    logoUrl = urlFor(partner.logo).width(300).height(200).fit('contain').auto('format').url();
+  } catch (error) {
+    console.error('Error generating logo URL:', error);
+  }
+}
+
+// Partner type labels
+const typeLabels: Record<string, string> = {
+  funding: 'Funding Partner',
+  service: 'Service Delivery Partner',
+  community: 'Community Partner',
+};
+---
+
+<div class="group relative bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-slate-200">
+  {partner.website ? (
+    <a
+      href={partner.website}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="block focus:outline-none focus:ring-2 focus:ring-brand-teal rounded-xl"
+      aria-label={`Visit ${partner.name} website`}
+    >
+      <div class="aspect-video flex items-center justify-center p-4">
+        {logoUrl ? (
+          <img
+            src={logoUrl}
+            alt={`${partner.name} logo`}
+            class="max-w-full max-h-full object-contain"
+            loading="lazy"
+          />
+        ) : (
+          <div class="text-center">
+            <p class="text-slate-900 font-bold text-lg">{partner.name}</p>
+            {partner.partnershipType && (
+              <p class="text-slate-600 text-sm mt-1">
+                {typeLabels[partner.partnershipType] || partner.partnershipType}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {partner.description && (
+        <div class="mt-3 pt-3 border-t border-slate-200">
+          <p class="text-sm text-slate-600 line-clamp-2">
+            {partner.description}
+          </p>
+        </div>
+      )}
+    </a>
+  ) : (
+    <div>
+      <div class="aspect-video flex items-center justify-center p-4">
+        {logoUrl ? (
+          <img
+            src={logoUrl}
+            alt={`${partner.name} logo`}
+            class="max-w-full max-h-full object-contain"
+            loading="lazy"
+          />
+        ) : (
+          <div class="text-center">
+            <p class="text-slate-900 font-bold text-lg">{partner.name}</p>
+            {partner.partnershipType && (
+              <p class="text-slate-600 text-sm mt-1">
+                {typeLabels[partner.partnershipType] || partner.partnershipType}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {partner.description && (
+        <div class="mt-3 pt-3 border-t border-slate-200">
+          <p class="text-sm text-slate-600 line-clamp-2">
+            {partner.description}
+          </p>
+        </div>
+      )}
+    </div>
+  )}
+</div>

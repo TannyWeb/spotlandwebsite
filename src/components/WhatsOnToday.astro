@@ -1,0 +1,99 @@
+---
+import ServiceCard from './ServiceCard';
+import { getNextUpcomingService } from '../lib/timeUtils';
+
+interface Props {
+  services: any[];
+}
+
+const { services } = Astro.props;
+const { service, context, timeText } = getNextUpcomingService(services);
+---
+
+<section
+  class="py-16 bg-gradient-to-br from-teal-50 to-white -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 border-y-4 border-brand-teal"
+  aria-labelledby="whats-on-heading"
+>
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+      {context === 'running-now' && (
+        <>
+          <div class="inline-flex items-center gap-2 mb-4 bg-green-100 border-2 border-green-600 text-green-800 px-5 py-2.5 rounded-full text-lg font-bold">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            </span>
+            <span>Happening Now</span>
+          </div>
+          <h2 id="whats-on-heading" class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            What's On
+          </h2>
+          <p class="text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed">
+            <strong class="text-brand-teal">{service!.title}</strong> is running right now. Drop in and join us!
+          </p>
+        </>
+      )}
+
+      {context === 'later-today' && (
+        <>
+          <h2 id="whats-on-heading" class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            What's On
+          </h2>
+          <p class="text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed">
+            Next up is <strong class="text-brand-teal">{service!.title}</strong> at {timeText.split(' at ')[1]}
+          </p>
+        </>
+      )}
+
+      {context === 'tomorrow' && (
+        <>
+          <h2 id="whats-on-heading" class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            What's On
+          </h2>
+          <p class="text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed">
+            Next up is <strong class="text-brand-teal">{service!.title}</strong> {timeText}
+          </p>
+          <p class="text-lg text-slate-600 mt-2">
+            We're closed for the rest of today. See you tomorrow!
+          </p>
+        </>
+      )}
+
+      {context === 'none' && (
+        <>
+          <h2 id="whats-on-heading" class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            Our Services
+          </h2>
+          <p class="text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed">
+            Free, friendly support for everyone in our community.
+          </p>
+        </>
+      )}
+    </div>
+
+    {service && (
+      <div class="flex justify-center mb-8">
+        <div class="max-w-md w-full">
+          <ServiceCard service={service} context={context} client:load />
+        </div>
+      </div>
+    )}
+
+    {context === 'none' && services.length > 0 && (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {services.slice(0, 3).map((s: any) => (
+          <ServiceCard service={s} client:load />
+        ))}
+      </div>
+    )}
+
+    <div class="text-center mt-10">
+      <a
+        href="/services"
+        class="bg-brand-teal hover:bg-teal-700 text-white font-semibold px-8 py-3.5 rounded-full transition-colors inline-flex items-center min-h-[44px] text-lg shadow-sm"
+      >
+        View All Services
+      </a>
+    </div>
+  </div>
+</section>
