@@ -1,7 +1,15 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
-import { getServiceBySlug, getFeaturedPost } from '../../lib/sanity';
+import { getServiceBySlug, getFeaturedPost, getAllServiceSlugs } from '../../lib/sanity';
 import ServiceDetail from '../../components/ServiceDetail';
+
+// Generate static paths for all services
+export async function getStaticPaths() {
+  const slugs = await getAllServiceSlugs();
+  return slugs.map((slug: string) => ({
+    params: { slug },
+  }));
+}
 
 const { slug } = Astro.params;
 

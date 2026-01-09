@@ -210,3 +210,15 @@ export async function getAllPosts() {
   return await sanityClient.fetch(query);
 }
 
+// Helper function to fetch all service slugs (for static generation)
+export async function getAllServiceSlugs() {
+  const query = `*[_type == "service" && defined(slug.current)].slug.current`;
+  return await sanityClient.fetch(query);
+}
+
+// Helper function to fetch all post slugs (for static generation)
+export async function getAllPostSlugs() {
+  const query = `*[_type == "post" && defined(slug.current)].slug.current`;
+  return await sanityClient.fetch(query);
+}
+

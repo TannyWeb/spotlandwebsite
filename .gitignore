@@ -42,3 +42,6 @@ src/payload-types.ts
 
 # Misc
 .cache/
+
+# Local Netlify folder
+.netlify
