@@ -5,6 +5,7 @@ import { postSchema } from './post';
 import { teamMemberSchema } from './teamMember';
 import { partnerSchema } from './partner';
 import { aboutPageSchema } from './aboutPage';
+import { gallerySchema } from './gallery';
 
 export const schemaTypes = [
   serviceSchema,
@@ -13,5 +14,6 @@ export const schemaTypes = [
   teamMemberSchema,
   partnerSchema,
   aboutPageSchema,
+  gallerySchema,
 ];
 

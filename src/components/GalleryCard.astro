@@ -1,0 +1,75 @@
+---
+import { urlFor } from '../lib/sanity';
+
+interface Props {
+  gallery: {
+    _id: string;
+    title: string;
+    slug: { current: string };
+    description?: string;
+    coverImage?: any;
+    photoCount: number;
+    publishedAt?: string;
+    featured?: boolean;
+  };
+}
+
+const { gallery } = Astro.props;
+
+// Generate optimized image URL
+const imageUrl = gallery.coverImage?.asset
+  ? urlFor(gallery.coverImage).width(600).height(450).fit('crop').auto('format').url()
+  : 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=450&fit=crop';
+---
+
+<a
+  href={`/gallery/${gallery.slug.current}`}
+  class="group block bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2"
+>
+  <!-- Cover Image -->
+  <div class="relative aspect-[4/3] overflow-hidden">
+    <img
+      src={imageUrl}
+      alt={gallery.title}
+      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+      loading="lazy"
+    />
+
+    <!-- Photo Count Badge -->
+    <div class="absolute bottom-3 right-3 bg-black/70 text-white px-3 py-1.5 rounded-full text-sm font-medium flex items-center gap-1.5">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      {gallery.photoCount} {gallery.photoCount === 1 ? 'photo' : 'photos'}
+    </div>
+
+    {/* Featured Badge */}
+    {gallery.featured && (
+      <div class="absolute top-3 left-3 bg-brand-teal text-white px-3 py-1.5 rounded-full text-sm font-medium">
+        Featured
+      </div>
+    )}
+  </div>
+
+  <!-- Content -->
+  <div class="p-6">
+    <h3 class="text-xl font-bold text-slate-900 group-hover:text-brand-teal transition-colors mb-2">
+      {gallery.title}
+    </h3>
+
+    {gallery.description && (
+      <p class="text-slate-600 line-clamp-2">
+        {gallery.description}
+      </p>
+    )}
+
+    {gallery.publishedAt && (
+      <p class="text-sm text-slate-500 mt-3">
+        {new Date(gallery.publishedAt).toLocaleDateString('en-GB', {
+          year: 'numeric',
+          month: 'long',
+        })}
+      </p>
+    )}
+  </div>
+</a>

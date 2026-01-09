@@ -219,3 +219,51 @@ export async function getAllPostSlugs() {
   return await sanityClient.fetch(query);
 }
 
+// Helper function to fetch all gallery albums
+export async function getGalleries() {
+  const query = `*[_type == "gallery"] | order(featured desc, publishedAt desc) {
+    _id,
+    title,
+    slug,
+    description,
+    coverImage {
+      asset->
+    },
+    "photoCount": count(photos),
+    publishedAt,
+    featured
+  }`;
+
+  return await sanityClient.fetch(query);
+}
+
+// Helper function to fetch a single gallery by slug
+export async function getGalleryBySlug(slug: string) {
+  const query = `*[_type == "gallery" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    description,
+    coverImage {
+      asset->
+    },
+    photos[] {
+      image {
+        asset->
+      },
+      caption,
+      altText
+    },
+    publishedAt,
+    featured
+  }`;
+
+  return await sanityClient.fetch(query, { slug });
+}
+
+// Helper function to fetch all gallery slugs (for static generation)
+export async function getAllGallerySlugs() {
+  const query = `*[_type == "gallery" && defined(slug.current)].slug.current`;
+  return await sanityClient.fetch(query);
+}
+

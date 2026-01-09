@@ -2,6 +2,7 @@
 import { getNavigation, getFeaturedPost } from '../lib/sanity';
 import '../styles/global.css';
 import AccreditationBadge from '../components/AccreditationBadge.astro';
+import MobileNavMenu from '../components/MobileNavMenu';
 
 interface Props {
   title: string;
@@ -57,12 +58,22 @@ const featuredPostUrl = featuredPostSlug ? `/news/${featuredPostSlug}` : null;
         <nav class="flex items-center justify-between py-4" role="navigation" aria-label="Main navigation">
           <a
             href="/"
-            class="text-xl md:text-2xl font-bold text-slate-900 hover:text-brand-teal transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded py-2 px-1 inline-flex items-center min-h-[44px]"
+            class="text-xl md:text-2xl font-bold text-slate-900 hover:text-brand-teal transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 rounded py-2 px-1 inline-flex items-center gap-3 min-h-[44px]"
           >
-            Spotland Community Centre
+            <img
+              src="/logo.png"
+              alt=""
+              class="h-10 md:h-12 w-auto"
+              aria-hidden="true"
+            />
+            <span class="hidden md:inline">Spotland Community Centre</span>
           </a>
 
           <div class="flex items-center gap-6">
+            {/* Mobile Navigation */}
+            <MobileNavMenu client:load menuItems={menuItems} />
+
+            {/* Desktop Navigation */}
             {menuItems.length > 0 && (
               <ul class="hidden md:flex gap-1">
                 {menuItems.map((item: any) => (
