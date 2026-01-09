@@ -38,7 +38,9 @@ export async function getServices() {
     title,
     slug,
     category,
-    mainImage,
+    mainImage {
+      asset->
+    },
     description,
     schedule,
     scheduleStructured,
@@ -59,7 +61,9 @@ export async function getServiceBySlug(slug: string) {
     title,
     slug,
     category,
-    mainImage,
+    mainImage {
+      asset->
+    },
     description,
     schedule,
     scheduleStructured,
@@ -94,7 +98,9 @@ export async function getPosts(limit: number = 10) {
     title,
     slug,
     publishedAt,
-    mainImage,
+    mainImage {
+      asset->
+    },
     body,
     featured,
     _createdAt,
@@ -114,7 +120,9 @@ export async function getPostBySlug(slug: string) {
     title,
     slug,
     publishedAt,
-    mainImage,
+    mainImage {
+      asset->
+    },
     body,
     featured,
     youtubeUrl,
@@ -144,7 +152,9 @@ export async function getAboutPageContent() {
   const query = `*[_type == "aboutPage"][0] {
     title,
     ourStory,
-    ourStoryImage,
+    ourStoryImage {
+      asset->
+    },
     showTeam,
     showPartners
   }`;
@@ -158,7 +168,9 @@ export async function getTeamMembers() {
     _id,
     name,
     role,
-    photo,
+    photo {
+      asset->
+    },
     bio
   }`;
 
@@ -170,7 +182,9 @@ export async function getPartners() {
   const query = `*[_type == "partner"] | order(order asc, name asc) {
     _id,
     name,
-    logo,
+    logo {
+      asset->
+    },
     description,
     website,
     partnershipType
@@ -186,7 +200,9 @@ export async function getAllPosts() {
     title,
     slug,
     publishedAt,
-    mainImage,
+    mainImage {
+      asset->
+    },
     body,
     featured
   }`;

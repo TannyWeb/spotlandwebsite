@@ -254,6 +254,14 @@ body {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
 }
 
+.team-card-overlay h3 {
+  color: #ffffff !important;
+}
+
+.team-card-overlay p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
 /* Improved section spacing */
 .section-spacing {
   padding-top: 5rem;
