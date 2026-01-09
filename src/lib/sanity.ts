@@ -4,14 +4,11 @@ import imageUrlBuilder from '@sanity/image-url';
 
 // Sanity client configuration
 // These values will come from environment variables (PUBLIC_ prefix for client-side access)
-const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID;
+// Fallback to hardcoded values for build environments (TODO: Use env vars in production)
+const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID || 'p99s2uik';
 const dataset = import.meta.env.PUBLIC_SANITY_DATASET || 'production';
 const apiVersion = import.meta.env.PUBLIC_SANITY_API_VERSION || '2024-01-01';
 const useCdn = import.meta.env.PUBLIC_SANITY_USE_CDN === 'true' || false;
-
-if (!projectId) {
-  throw new Error('Missing PUBLIC_SANITY_PROJECT_ID environment variable');
-}
 
 // Create the Sanity client
 export const sanityClient: SanityClient = createClient({
