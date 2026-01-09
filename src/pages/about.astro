@@ -2,11 +2,10 @@
 import MainLayout from '../layouts/MainLayout.astro';
 import { getAboutPageContent, getTeamMembers, getPartners, getAllPosts } from '../lib/sanity';
 import { urlFor } from '../lib/sanity';
-import PortableText from '../components/PortableText';
 import TeamMemberCard from '../components/TeamMemberCard.astro';
 import PartnerLogo from '../components/PartnerLogo.astro';
 import NewsCard from '../components/NewsCard.astro';
-import AccreditationBadge from '../components/AccreditationBadge.astro';
+import WaveDivider from '../components/WaveDivider.astro';
 
 // Fetch all data
 let aboutContent = null;
@@ -25,48 +24,83 @@ try {
 ---
 
 <MainLayout title="About Spotland Community Centre">
-  <!-- Our Story Section -->
-  <section class="py-12 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto">
-      <h1 class="text-4xl font-bold text-slate-900 mb-8">
-        {aboutContent?.title || 'About Spotland Community Centre'}
-      </h1>
-
-      {aboutContent?.ourStoryImage && (
-        <div class="mb-8 rounded-3xl overflow-hidden shadow-lg border-4 border-brand-teal">
-          <img
-            src={urlFor(aboutContent.ourStoryImage).width(1200).auto('format').url()}
-            alt="Spotland Community Centre"
-            class="w-full h-auto"
-            loading="eager"
-          />
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden">
+    <div class="bg-teal-gradient py-20 md:py-28">
+      <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+        <!-- Pill badge -->
+        <div class="inline-flex items-center gap-2 mb-6 bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Get to Know Us</span>
         </div>
-      )}
 
-      {aboutContent?.ourStory && (
-        <div class="prose prose-lg max-w-none">
-          <PortableText value={aboutContent.ourStory} client:load />
-        </div>
-      )}
+        <h1 class="text-white text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+          About Our Centre
+        </h1>
+        <p class="text-white/95 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed">
+          Meet the dedicated team and partners who make Spotland Community Centre a vibrant hub for community growth and connection.
+        </p>
+      </div>
+    </div>
+    <WaveDivider position="bottom" fill="white" />
+  </section>
 
-      {!aboutContent && (
-        <div class="bg-teal-50 border-l-4 border-brand-teal p-6 rounded-r-lg">
-          <p class="text-lg text-slate-700">
-            Welcome to Spotland Community Centre, your local hub in Rochdale. We're here to support our community with free, friendly services for everyone.
+  <!-- Mission & Values Cards -->
+  <section class="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-5xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Our Mission -->
+        <div class="bg-white rounded-3xl p-8 shadow-md border border-slate-100">
+          <div class="w-14 h-14 bg-teal-100 rounded-2xl flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-900 mb-4">Our Mission</h2>
+          <p class="text-slate-600 text-lg leading-relaxed">
+            To empower individuals and strengthen communities through inclusive programs, education, and a welcoming space where everyone belongs.
           </p>
         </div>
-      )}
+
+        <!-- Our Values -->
+        <div class="bg-white rounded-3xl p-8 shadow-md border border-slate-100">
+          <div class="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-slate-900 mb-4">Our Values</h2>
+          <p class="text-slate-600 text-lg leading-relaxed">
+            Inclusivity, respect, and collaboration guide everything we do. We believe in the power of community to create positive, lasting change.
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Our Team Section -->
+  <!-- Meet the Staff Section -->
   {(aboutContent?.showTeam !== false) && team.length > 0 && (
-    <section class="py-12 bg-teal-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+    <section class="py-16 bg-slate-50 px-4 sm:px-6 lg:px-8">
       <div class="max-w-7xl mx-auto">
-        <h2 class="text-3xl font-bold text-slate-900 mb-2">Our Team</h2>
-        <p class="text-lg text-slate-700 mb-8 max-w-2xl">
-          Meet the friendly people who make Spotland Community Centre what it is.
-        </p>
+        <div class="text-center mb-12">
+          <!-- Pill badge -->
+          <div class="inline-flex items-center gap-2 mb-4 bg-teal-100 text-teal-700 px-4 py-1.5 rounded-full text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span>Our Team</span>
+          </div>
+
+          <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            Meet the Staff
+          </h2>
+          <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            Our dedicated team works tirelessly to create a welcoming environment and deliver impactful programs for our community.
+          </p>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {team.map((member: any) => (
             <TeamMemberCard member={member} />
@@ -76,46 +110,86 @@ try {
     </section>
   )}
 
-  <!-- Community Partners Section -->
+  <!-- Our Partners Section -->
   {(aboutContent?.showPartners !== false) && partners.length > 0 && (
-    <section class="py-12 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+    <section class="py-16 bg-white px-4 sm:px-6 lg:px-8">
       <div class="max-w-7xl mx-auto">
-        <h2 class="text-3xl font-bold text-slate-900 mb-2">Our Partners</h2>
-        <p class="text-lg text-slate-700 mb-8 max-w-2xl">
-          We work with amazing organisations to bring the best support to our community.
-        </p>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="text-center mb-12">
+          <!-- Pill badge -->
+          <div class="inline-flex items-center gap-2 mb-4 bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            <span>Partnerships</span>
+          </div>
+
+          <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            Our Partners
+          </h2>
+          <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            We're proud to work alongside these organisations who share our commitment to community development and social impact.
+          </p>
+        </div>
+
+        <!-- Partner logos grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 mb-12">
           {partners.map((partner: any) => (
             <PartnerLogo partner={partner} />
           ))}
+        </div>
+
+        <!-- Interested in Partnering CTA -->
+        <div class="bg-teal-50 rounded-3xl p-8 text-center border border-teal-100">
+          <h3 class="text-xl font-bold text-slate-900 mb-3">
+            Interested in Partnering?
+          </h3>
+          <p class="text-slate-600 mb-6 max-w-md mx-auto">
+            We're always looking for organisations who share our vision.
+          </p>
+          <a
+            href="mailto:info@spotlandcommunity.org?subject=Partnership Enquiry"
+            class="inline-flex items-center gap-2 text-teal-600 font-semibold hover:text-teal-700 transition-colors min-h-[44px]"
+          >
+            Get in touch to discuss partnership opportunities
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
         </div>
       </div>
     </section>
   )}
 
   <!-- Quality & Accreditation -->
-  <section class="py-12 bg-gradient-to-br from-amber-50 to-teal-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto text-center">
+  <section class="py-16 bg-gradient-to-br from-amber-50 to-teal-50 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto text-center">
       <h2 class="text-3xl font-bold text-slate-900 mb-4">Quality You Can Trust</h2>
       <p class="text-lg text-slate-700 mb-8 max-w-2xl mx-auto">
-        We're proud to be recognized for the quality of our services.
+        We're proud to be recognized for the quality of our services and commitment to our community.
       </p>
-      <AccreditationBadge variant="large" client:load />
+      <div class="bg-white rounded-2xl p-8 shadow-sm inline-block">
+        <p class="text-slate-600">
+          Registered Charity serving the community since 1996
+        </p>
+      </div>
     </div>
   </section>
 
   <!-- News & Updates Section -->
   {posts.length > 0 && (
-    <section class="py-12 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+    <section class="py-16 bg-white px-4 sm:px-6 lg:px-8">
       <div class="max-w-7xl mx-auto">
-        <h2 class="text-3xl font-bold text-slate-900 mb-2 border-b-2 border-brand-teal pb-2 inline-block">
-          News & Updates
-        </h2>
-        <p class="text-lg text-slate-700 mb-8 mt-4 max-w-2xl">
-          Stay up to date with the latest from Spotland Community Centre.
-        </p>
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            News & Updates
+          </h2>
+          <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            Stay up to date with the latest from Spotland Community Centre.
+          </p>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((post: any) => (
+          {posts.slice(0, 3).map((post: any) => (
             <NewsCard post={post} />
           ))}
         </div>
