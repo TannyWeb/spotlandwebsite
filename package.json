@@ -9,7 +9,7 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/netlify": "^6.6.3",
+    "@astrojs/netlify": "^6.4.1",
     "@astrojs/react": "^4.4.2",
     "@portabletext/react": "^6.0.2",
     "@radix-ui/react-aspect-ratio": "^1.1.8",
