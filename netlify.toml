@@ -5,7 +5,13 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Route /admin to SSR function for Sanity Studio
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/admin/*"
+  to = "/.netlify/functions/ssr"
+  status = 200
+
+[[redirects]]
+  from = "/admin"
+  to = "/.netlify/functions/ssr"
   status = 200
