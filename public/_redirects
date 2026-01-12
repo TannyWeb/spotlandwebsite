@@ -1,0 +1,2 @@
+/admin/*  /.netlify/functions/ssr  200
+/admin    /.netlify/functions/ssr  200
