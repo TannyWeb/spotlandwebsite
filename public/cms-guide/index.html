@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotland Hub CMS Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #f59e0b;
+            --success: #10b981;
+            --background: #fafafa;
+            --surface: #ffffff;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--background);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .quick-links {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .quick-links h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .link-card {
+            background: var(--background);
+            padding: 1.25rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .link-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .link-card-title {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .link-card a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            word-break: break-all;
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        .link-card a:hover {
+            text-decoration: underline;
+        }
+
+        .section {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            scroll-margin-top: 100px;
+        }
+
+        .section-title {
+            font-family: 'Fraunces', serif;
+            font-size: 2rem;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--primary);
+            display: inline-block;
+        }
+
+        .subsection-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.5rem;
+            color: var(--text);
+            margin: 2rem 0 1rem 0;
+            padding-left: 1rem;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .step {
+            background: var(--background);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-right: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .step-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text);
+            display: inline;
+        }
+
+        .step-content {
+            margin-top: 1rem;
+            padding-left: 2.5rem;
+            color: var(--text);
+        }
+
+        .screenshot-placeholder {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .screenshot-placeholder::before {
+            content: "📸";
+            display: block;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-box-title::before {
+            content: "ℹ️";
+        }
+
+        .tip-box {
+            background: #fef3c7;
+            border-left: 4px solid var(--secondary);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .tip-box-title {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tip-box-title::before {
+            content: "💡";
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--surface);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: var(--background);
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text);
+            margin-bottom: 0.75rem;
+        }
+
+        .faq-question::before {
+            content: "Q: ";
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .faq-answer {
+            padding-left: 1.5rem;
+            color: var(--text);
+        }
+
+        ul {
+            padding-left: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            background: var(--background);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: var(--primary-dark);
+        }
+
+        .button-example {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button-example:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .footer {
+            background: var(--surface);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer p {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer strong {
+            color: var(--text);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .subsection-title {
+                font-size: 1.25rem;
+            }
+
+            .link-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation menu */
+        .nav-menu {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-menu h3 {
+            font-family: 'Fraunces', serif;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-menu a {
+            color: var(--primary);
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-menu a:hover {
+            background: var(--background);
+            padding-left: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 Spotland Hub CMS Guide</h1>
+        <p>Your step-by-step guide to updating your website</p>
+    </div>
+
+    <div class="container">
+        
+        <div class="quick-links">
+            <h2>🔗 Important Links</h2>
+            <p style="margin-bottom: 1rem;">Save these links - you'll need them regularly!</p>
+            <div class="link-grid">
+                <div class="link-card">
+                    <span class="link-card-title">📝 Edit Content (CMS)</span>
+                    <a href="https://spotland-hub.sanity.studio" target="_blank">https://spotland-hub.sanity.studio</a>
+                </div>
+                <div class="link-card">
+                    <span class="link-card-title">🌐 View Website</span>
+                    <a href="https://staging--friendly-yonath-8604ab.netlify.app/" target="_blank">https://staging--friendly-yonath-8604ab.netlify.app/</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-menu">
+            <h3>📑 Quick Navigation</h3>
+            <ul>
+                <li><a href="#getting-started">Getting Started & Login</a></li>
+                <li><a href="#add-post">Adding a News Post</a></li>
+                <li><a href="#add-service">Adding a Service</a></li>
+                <li><a href="#add-team">Adding Team Members</a></li>
+                <li><a href="#add-partner">Adding Partners</a></li>
+                <li><a href="#add-gallery">Creating Photo Albums</a></li>
+                <li><a href="#edit-about">Updating the About Page</a></li>
+                <li><a href="#editing">Editing Existing Content</a></li>
+                <li><a href="#images">Image Upload Tips</a></li>
+                <li><a href="#viewing">Viewing Your Changes</a></li>
+                <li><a href="#faq">Common Questions (FAQ)</a></li>
+            </ul>
+        </div>
+
+        <!-- GETTING STARTED SECTION -->
+        <div class="section" id="getting-started">
+            <h2 class="section-title">🚀 Getting Started - How to Log In</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Open your web browser</span>
+                <div class="step-content">
+                    <p>Chrome, Edge, or Safari all work fine. Use whichever browser you're comfortable with.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Go to the CMS login page</span>
+                <div class="step-content">
+                    <p>Type this address into your browser:</p>
+                    <p style="margin-top: 0.5rem;"><code>https://spotland-hub.sanity.studio</code></p>
+                    <div class="tip-box">
+                        <div class="tip-box-title">Tip</div>
+                        <p>Bookmark this page so you can find it easily next time!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-title">Sign in with your account</span>
+                <div class="step-content">
+                    <p>You'll see a login screen. Click sign in with the email account that's been set up for you. In your case, <strong>asgharspotlandcc@inbox.com</strong>></p>
+                    <div class="screenshot-placeholder">
+                        <img src="1.3.png" alt="Login screen">
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <span class="step-title">Welcome to the dashboard!</span>
+                <div class="step-content">
+                    <p>Once logged in, you'll see the main dashboard with a list of content types on the left side.</p>
+                    <div class="screenshot-placeholder">
+                        <img src="1.4.png" alt="Main dashboard">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WHAT YOU CAN UPDATE SECTION -->
+        <div class="section">
+            <h2 class="section-title">📋 What You Can Update</h2>
+            <p style="margin-bottom: 1.5rem;">Here's everything you can manage on your website:</p>
+            
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Section</th>
+                            <th>What It Does</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Posts</strong></td>
+                            <td>News articles and updates for the community</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Services</strong></td>
+                            <td>The services you offer (advice, youth programs, etc.)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Team Members</strong></td>
+                            <td>Staff photos, names, and roles for the About page</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Partners</strong></td>
+                            <td>Logos and info for your funding and community partners</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Photo Gallery</strong></td>
+                            <td>Photo albums to showcase your activities</td>
+                        </tr>
+                        <tr>
+                            <td><strong>About Page Content</strong></td>
+                            <td>The main text and images on your About page</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ADD POST SECTION -->
+        <div class="section" id="add-post">
+            <h2 class="section-title">📰 Adding a News Post</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Click "Post" in the left menu</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        <img src="2.1.png" alt="Left sidebar with Post highlighted">
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Click the "+ Create" button</span>
+                <div class="step-content">
+                    <p>You'll find this near the top of the page.</p>
+                    <div class="screenshot-placeholder">
+                        <img src="2.2.png" alt="Post list view with the + Create or compose button highlighted">
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-title">Fill in the form</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        <img src="2.3.png" alt="Empty Post editing form showing all the fields">  
+                    </div>
+                    
+                    <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 600;">Here's what each field means:</h3>
+                    
+                    <ul>
+                        <li><strong>Title</strong> - The headline for your post (keep it short and clear)</li>
+                        <li><strong>URL Slug</strong> - Click the "Generate" button and it will create this automatically from your title</li>
+                    </ul>
+                    
+                    <div class="screenshot-placeholder">
+                        <img src="2.3.5.png" alt="Slug field with Generate button highlighted">
+                    </div>
+                    
+                    <ul>
+                        <li><strong>Published Date</strong> - When you want the post dated (today's date is already filled in)</li>
+                        <li><strong>Main Image</strong> - Click the grey box to upload a photo from your computer</li>
+                    </ul>
+                    
+                    <div class="screenshot-placeholder">
+                        <img src="2.3.6.png" alt="Image upload area, showing where to click">
+                    </div>
+                    
+                    <ul>
+                        <li><strong>Body</strong> - Type your news article here. It works like Word - you can make text bold, add bullet points, etc.</li>
+                    </ul>
+                    
+                    <div class="screenshot-placeholder">
+                        <img src="2.3..7.png" alt="Body text editor showing the formatting toolbar">
+                    </div>
+                    
+                    <ul>
+                        <li><strong>Featured (Pin to Homepage)</strong> - Tick this box if you want this post shown at the top of the "Latest from the Hub" section</li>
+                        <li><strong>YouTube Video URL</strong> - If you have a YouTube video, paste the link here (optional)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <span class="step-title">Click "Publish" when you're ready</span>
+                <div class="step-content">
+                    <p>You'll find this button at the bottom of the screen.</p>
+                    <div class="screenshot-placeholder">
+                        <img src="2.3.8.png" alt="Bottom of form showing the Publish button">
+                    </div>
+                    <div class="info-box">
+                        <div class="info-box-title">Remember</div>
+                        <p>Your changes won't appear on the website until you click Publish!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADD SERVICE SECTION -->
+        <div class="section" id="add-service">
+            <h2 class="section-title">🤝 Adding a New Service</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Click "Service" in the left menu</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        <img src="3.1.png" alt="Left sidebar with Service highlighted">
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Click "+ Create"</span>
+                <div class="step-content">
+                    <p>Same as when adding a post.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-title">Fill in the form</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        <img src="3.2.png" alt="Empty Service editing form">
+                    </div>
+                    
+                    <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 600;">Service fields explained:</h3>
+                    
+                    <ul>
+                        <li><strong>Service Title</strong> - e.g., "Benefits Advice Drop-In"</li>
+                        <li><strong>URL Slug</strong> - Click "Generate"</li>
+                        <li><strong>Service Category</strong> - Choose the type:
+                            <ul style="margin-top: 0.5rem;">
+                                <li>Advice & Support</li>
+                                <li>Health & Wellbeing</li>
+                                <li>Youth Programs</li>
+                                <li>Education & Learning</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <div class="screenshot-placeholder">
+                        <img src="3.3.png" alt="Category selection showing the radio button options">
+                    </div>
+                    
+                    <ul>
+                        <li><strong>Main Image</strong> - Upload a welcoming photo</li>
+                        <li><strong>Service Description</strong> - Explain what this service offers</li>
+                        <li><strong>Schedule</strong> - When it runs (e.g., "Tuesdays 10am-2pm")</li>
+                        <li><strong>Schedule (Time-based)</strong> - You can also add specific time slots by clicking "Add item"</li>
+                    </ul>
+                    
+                    <div class="screenshot-placeholder">
+                        <img src="3.4.png" alt="Schedule time-based section showing day/time picker">
+                    </div>
+                    
+                    <ul>
+                        <li><strong>Get in Touch</strong> - Add phone number and email</li>
+                        <li><strong>Good to Know</strong> - Helpful info for nervous first-timers (e.g., "No need to book, just turn up!")</li>
+                        <li><strong>Feature on Homepage</strong> - Tick to show on homepage</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <span class="step-title">Click "Publish"</span>
+                <div class="step-content">
+                    <p>Your new service will now appear on the website!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADD TEAM MEMBER SECTION -->
+        <div class="section" id="add-team">
+            <h2 class="section-title">👥 Adding a Team Member</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Click "Team Member" in the left menu</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        <img src="4.1.png" alt="Left sidebar with Team Member highlighted">
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Click "+ Create"</span>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-title">Fill in the form</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        <img src="4.2.png" alt="Empty Team Member editing form">
+                    </div>
+                    
+                    <ul>
+                        <li><strong>Name</strong> - Their full name</li>
+                        <li><strong>Role</strong> - Their job title (e.g., "Community Manager")</li>
+                        <li><strong>Photo</strong> - Upload their picture</li>
+                        <li><strong>Bio</strong> - A short description (2-3 sentences about them)</li>
+                        <li><strong>Display Order</strong> - Use numbers to control the order they appear (1 = first, 2 = second, etc.)</li>
+                    </ul>
+                    
+                    <div class="tip-box">
+                        <div class="tip-box-title">Display Order Tip</div>
+                        <p>Want someone to appear first? Give them Display Order: 1. Second person gets 2, and so on.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <span class="step-title">Click "Publish"</span>
+            </div>
+        </div>
+
+        <!-- ADD PARTNER SECTION -->
+        <div class="section" id="add-partner">
+            <h2 class="section-title">🤝 Adding a Partner Organisation</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Click "Community Partner" in the left menu</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        <img src="4.3.png" alt="Left sidebar with Community Partner highlighted">
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Click "+ Create"</span>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-title">Fill in the form</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        <img src="4.4.png" alt="Empty Partner editing form">
+                    </div>
+                    
+                    <ul>
+                        <li><strong>Organisation Name</strong> - The partner's name</li>
+                        <li><strong>Logo</strong> - Upload their logo image</li>
+                        <li><strong>Description</strong> - What they do (1-2 sentences)</li>
+                        <li><strong>Website</strong> - Their web address (optional)</li>
+                        <li><strong>Partnership Type</strong> - Choose one:
+                            <ul style="margin-top: 0.5rem;">
+                                <li>Funding Partner</li>
+                                <li>Service Delivery Partner</li>
+                                <li>Community Partner</li>
+                            </ul>
+                        </li>
+                        <li><strong>Display Order</strong> - Use numbers to control the order (1 = first)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <span class="step-title">Click "Publish"</span>
+            </div>
+        </div>
+
+        <!-- ADD GALLERY SECTION -->
+        <div class="section" id="add-gallery">
+            <h2 class="section-title">📸 Creating a Photo Album</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Click "Photo Gallery" in the left menu</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        <img src="5.1.png" alt="Left sidebar with Photo Gallery highlighted">
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Click "+ Create"</span>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-title">Fill in the form</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        <img src="5.2.png" alt="Empty Gallery editing form">
+                    </div>
+                    
+                    <ul>
+                        <li><strong>Album Title</strong> - e.g., "Summer Fair 2024"</li>
+                        <li><strong>URL Slug</strong> - Click "Generate"</li>
+                        <li><strong>Description</strong> - A brief summary of the album</li>
+                        <li><strong>Cover Image</strong> - The main image shown on the gallery page (this is required)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <span class="step-title">Add your photos</span>
+                <div class="step-content">
+                    <p>Click "Add item" under the Photos section.</p>
+                    <div class="screenshot-placeholder">
+                        <img src="5.3.png" alt="Photos section showing Add item button">
+                    </div>
+                    
+                    <h3 style="margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 600;">For each photo you add:</h3>
+                    
+                    <ul>
+                        <li><strong>Upload the image</strong> - Choose your photo file</li>
+                        <li><strong>Add a Caption</strong> - This appears below the photo on the website</li>
+                        <li><strong>Add Alt Text</strong> - Describe what's in the photo (e.g., "Children playing football in the community garden"). This helps people who can't see images understand what's there.</li>
+                    </ul>
+                    
+                    <div class="screenshot-placeholder">
+                        <img src="5.4.png" alt="Individual photo form showing image, caption, and alt text fields">
+                    </div>
+                    
+                    <div class="info-box">
+                        <div class="info-box-title">Why Alt Text Matters</div>
+                        <p>Alt text helps people using screen readers understand your images. It's also good for search engines!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">5</span>
+                <span class="step-title">Click "Publish"</span>
+            </div>
+        </div>
+
+        <!-- UPDATE ABOUT PAGE SECTION -->
+        <div class="section" id="edit-about">
+            <h2 class="section-title">ℹ️ Updating the About Page</h2>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Click "About Page Content" in the left menu</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        SCREENSHOT: Left sidebar with "About Page Content" highlighted
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Click on the existing "About Page Content" item</span>
+                <div class="step-content">
+                    <p>There should only be one item in the list.</p>
+                    <div class="screenshot-placeholder">
+                        SCREENSHOT: About Page Content in the list
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-title">Edit the fields</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        SCREENSHOT: About Page editing form
+                    </div>
+                    
+                    <ul>
+                        <li><strong>Page Title</strong> - The main heading</li>
+                        <li><strong>Our Story</strong> - The history and mission text</li>
+                        <li><strong>Story Image</strong> - The image shown alongside the story</li>
+                        <li><strong>Show Team Section</strong> - Tick to display team members</li>
+                        <li><strong>Show Partners Section</strong> - Tick to display partner logos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <span class="step-title">Click "Publish"</span>
+            </div>
+        </div>
+
+        <!-- EDITING EXISTING CONTENT -->
+        <div class="section" id="editing">
+            <h2 class="section-title">✏️ Editing Existing Content</h2>
+            <p style="margin-bottom: 1.5rem;">Need to change something you've already published? Here's how:</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Click the content type in the left menu</span>
+                <div class="step-content">
+                    <p>For example, click "Post" if you want to edit a news article.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">You'll see a list of all existing items</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        <img src="6.1.png" alt="List view showing multiple posts with titles and dates">
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-title">Click on the one you want to edit</span>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <span class="step-title">Make your changes</span>
+                <div class="step-content">
+                    <p>Update any fields you need to change.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">5</span>
+                <span class="step-title">Click "Publish" to save</span>
+                <div class="step-content">
+                    <div class="screenshot-placeholder">
+                        <img src="6.2.png" alt="Publish button after making edits">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- IMAGE TIPS SECTION -->
+        <div class="section" id="images">
+            <h2 class="section-title">🖼️ Uploading Images - Tips for Best Results</h2>
+            
+            <div class="tip-box">
+                <div class="tip-box-title">File Types</div>
+                <p>JPG or PNG work best for photos. Make sure your images are clear and not blurry!</p>
+            </div>
+
+            <div class="tip-box">
+                <div class="tip-box-title">Image Size</div>
+                <p>Images should be at least <strong>800 pixels wide</strong> for good quality. Larger is usually better - the website will resize them automatically.</p>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">What's a Hotspot?</div>
+                <p>After uploading an image, you can click it and drag a circle to set a "hotspot". This tells the website which part of the image is most important, so it won't get cropped awkwardly on different screen sizes.</p>
+            </div>
+
+            <div class="screenshot-placeholder">
+                <img src="7.1.png" alt="Image with hotspot circle visible, showing how to drag it">
+            </div>
+
+            <p style="margin-top: 1rem;"><strong>Example:</strong> If you upload a photo of someone's face, drag the hotspot circle to their face. That way, even if the image gets cropped on a phone screen, the face will still be visible.</p>
+        </div>
+
+        <!-- VIEWING CHANGES SECTION -->
+        <div class="section" id="viewing">
+            <h2 class="section-title">👀 How to See Your Changes on the Website</h2>
+            <p style="margin-bottom: 1.5rem;">After you click "Publish", follow these steps to view your changes:</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <span class="step-title">Open a new browser tab</span>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <span class="step-title">Go to the website</span>
+                <div class="step-content">
+                    <p><code>https://staging--friendly-yonath-8604ab.netlify.app/</code></p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <span class="step-title">Wait a moment</span>
+                <div class="step-content">
+                    <p>You may need to wait <strong>1-2 minutes</strong> for changes to appear. The website needs time to update!</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <span class="step-title">If you don't see your changes...</span>
+                <div class="step-content">
+                    <p>Try these two things:</p>
+                    <ul>
+                        <li><strong>Hard Refresh:</strong> Press <code>Ctrl + Shift + R</code> on your keyboard (or <code>Cmd + Shift + R</code> on a Mac)</li>
+                        <li><strong>Private Window:</strong> Open the website in a "private" or "incognito" window</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="screenshot-placeholder">
+                <img src="8.1.png" alt="Browser showing the live website homepage">
+            </div>
+        </div>
+
+        <!-- FAQ SECTION -->
+        <div class="section" id="faq">
+            <h2 class="section-title">❓ Common Questions (FAQ)</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">I made changes but can't see them on the website?</div>
+                <div class="faq-answer">
+                    <ul>
+                        <li>Make sure you clicked "Publish" (not just saved a draft)</li>
+                        <li>Wait a minute or two, then refresh the page</li>
+                        <li>Try opening the website in a "private" or "incognito" window</li>
+                        <li>Do a hard refresh: <code>Ctrl + Shift + R</code> (or <code>Cmd + Shift + R</code> on Mac)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I delete something?</div>
+                <div class="faq-answer">
+                    <ul>
+                        <li>Open the item you want to delete</li>
+                        <li>Click the three dots menu (⋮) at the top right</li>
+                        <li>Select "Delete"</li>
+                        <li>Confirm when asked</li>
+                    </ul>
+                    <div class="screenshot-placeholder">
+                        <img src="9.1.png" alt="Three dots menu expanded showing Delete option">
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">I made a mistake - can I undo?</div>
+                <div class="faq-answer">
+                    <p>Yes! The system keeps a history of your changes.</p>
+                    <ul>
+                        <li>Click the clock icon at the top of the editing screen</li>
+                        <li>You'll see previous versions</li>
+                        <li>You can restore an older version if needed</li>
+                    </ul>
+                    <div class="screenshot-placeholder">
+                        SCREENSHOT: Clock/history icon location
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">The text looks funny - how do I format it?</div>
+                <div class="faq-answer">
+                    <ul>
+                        <li>When typing in body text, <strong>highlight the text</strong> you want to format</li>
+                        <li>A small menu appears with options for bold, italic, bullet points, etc.</li>
+                        <li>Click the formatting you want</li>
+                    </ul>
+                    <div class="screenshot-placeholder">
+                        <img src="10.1.png" alt="Text selected with formatting popup visible">
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I add a link in my text?</div>
+                <div class="faq-answer">
+                    <ul>
+                        <li>Highlight the words you want to make into a link</li>
+                        <li>Click the link icon in the formatting menu</li>
+                        <li>Paste the web address</li>
+                        <li>Click "Apply" or "OK"</li>
+                    </ul>
+                    <div class="screenshot-placeholder">
+                        <img src="10.2.png" alt="Link dialog box">
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I log out?</div>
+                <div class="faq-answer">
+                    <ul>
+                        <li>Click your profile picture or initials in the top right corner</li>
+                        <li>Click "Sign out"</li>
+                    </ul>
+                    <div class="screenshot-placeholder">
+                        <img src="11.1.png" alt="Profile menu showing Sign out option">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p><strong>Need Help?</strong></p>
+        <p>If you get stuck or something isn't working, just send a message and we'll help sort it out.</p>
+        <p style="margin-top: 1rem; font-size: 1.1rem;"><strong>Remember: You can't break anything!</strong></p>
+        <p>If something goes wrong, we can always fix it. Don't be afraid to experiment! 🎉</p>
+    </div>
+
+</body>
+</html>
