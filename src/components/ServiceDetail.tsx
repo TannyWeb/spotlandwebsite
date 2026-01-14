@@ -24,9 +24,15 @@ interface ServiceDetailProps {
       value: string
     }>
     callToAction?: {
-      phoneNumber?: string
+      phoneNumbers?: Array<{
+        label?: string
+        number: string
+      }>
+      emails?: Array<{
+        label?: string
+        address: string
+      }>
       buttonText?: string
-      email?: string
     }
   }
   featuredPostSlug?: string | null
@@ -199,23 +205,48 @@ export default function ServiceDetail({ service, featuredPostSlug }: ServiceDeta
               We'd love to hear from you and help you get started.
             </p>
           </CardHeader>
-          <CardContent className="p-8 pt-0">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <a 
-                href="tel:01706123456"
-                className="inline-flex items-center justify-center gap-2 bg-white text-slate-900 hover:bg-slate-50 font-bold text-lg rounded-full px-8 py-3 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#26a1ab] min-h-[48px]"
-              >
-                <Phone className="w-5 h-5" aria-hidden="true" />
-                <span>Call</span>
-              </a>
-              <a 
-                href="mailto:hello@spotlandhub.com"
-                className="inline-flex items-center justify-center gap-2 bg-[#d97706] text-white hover:bg-[#b86505] font-bold text-lg rounded-full px-8 py-3 transition-colors focus:outline-none focus:ring-2 focus:ring-[#d97706] focus:ring-offset-2 focus:ring-offset-white min-h-[48px]"
-              >
-                <Mail className="w-5 h-5" aria-hidden="true" />
-                Email
-              </a>
-            </div>
+          <CardContent className="p-8 pt-0 space-y-6">
+            {/* Phone Numbers */}
+            {service.callToAction?.phoneNumbers && service.callToAction.phoneNumbers.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                  <Phone className="w-5 h-5" aria-hidden="true" />
+                  {service.callToAction.buttonText || 'Give us a ring'}
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {service.callToAction.phoneNumbers.map((phone, index) => (
+                    <a
+                      key={index}
+                      href={`tel:${phone.number.replace(/\s/g, '')}`}
+                      className="inline-flex items-center gap-2 bg-white text-slate-900 hover:bg-slate-50 font-medium text-base rounded-full px-5 py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#26a1ab] min-h-[44px]"
+                    >
+                      <span>{phone.label || phone.number}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Email Addresses */}
+            {service.callToAction?.emails && service.callToAction.emails.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                  <Mail className="w-5 h-5" aria-hidden="true" />
+                  Email Us
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {service.callToAction.emails.map((email, index) => (
+                    <a
+                      key={index}
+                      href={`mailto:${email.address}`}
+                      className="inline-flex items-center gap-2 bg-[#d97706] text-white hover:bg-[#b86505] font-medium text-base rounded-full px-5 py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-[#d97706] focus:ring-offset-2 focus:ring-offset-white min-h-[44px]"
+                    >
+                      <span>{email.label || email.address}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

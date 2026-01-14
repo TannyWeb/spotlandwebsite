@@ -30,8 +30,8 @@ body {
 }
 
 /* Typography scale - WCAG AA compliant, Grade 6 reading level */
+/* Note: font-size removed to allow Tailwind classes to control sizing per-page */
 h1, .heading-1 {
-  font-size: 2.25rem; /* 36px */
   font-weight: 700;
   line-height: 1.2;
   color: #0f172a; /* slate-900 */

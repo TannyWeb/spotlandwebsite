@@ -45,3 +45,4 @@ src/payload-types.ts
 
 # Local Netlify folder
 .netlify
+.sanity/

@@ -124,18 +124,68 @@ export const serviceSchema = defineType({
       type: 'object',
       fields: [
         defineField({
-          name: 'phoneNumber',
-          title: 'Phone Number',
-          type: 'string',
-          description: 'Contact number for this service',
-          placeholder: '0161 XXX XXXX',
+          name: 'phoneNumbers',
+          title: 'Phone Numbers',
+          type: 'array',
+          description: 'Contact numbers for this service (add one per staff member)',
+          of: [{
+            type: 'object',
+            fields: [
+              defineField({
+                name: 'label',
+                title: 'Label',
+                type: 'string',
+                description: 'Who is this number for? (e.g., "Sarah - Youth Work")',
+                placeholder: 'Main Office',
+              }),
+              defineField({
+                name: 'number',
+                title: 'Phone Number',
+                type: 'string',
+                description: 'The phone number',
+                placeholder: '0161 XXX XXXX',
+                validation: (Rule) => Rule.required(),
+              }),
+            ],
+            preview: {
+              select: { label: 'label', number: 'number' },
+              prepare({ label, number }) {
+                return { title: label ? `${label}: ${number}` : number };
+              },
+            },
+          }],
         }),
         defineField({
-          name: 'email',
-          title: 'Email Address',
-          type: 'string',
-          description: 'Email address for this service (optional)',
-          placeholder: 'info@spotlandcommunity.org',
+          name: 'emails',
+          title: 'Email Addresses',
+          type: 'array',
+          description: 'Email addresses for this service (add one per staff member)',
+          of: [{
+            type: 'object',
+            fields: [
+              defineField({
+                name: 'label',
+                title: 'Label',
+                type: 'string',
+                description: 'Who is this email for? (e.g., "John - Advice")',
+                placeholder: 'General Enquiries',
+              }),
+              defineField({
+                name: 'address',
+                title: 'Email Address',
+                type: 'string',
+                description: 'The email address',
+                placeholder: 'info@spotlandcommunity.org',
+                validation: (Rule) => Rule.required(),
+              }),
+            ],
+            preview: {
+              select: { label: 'label', address: 'address' },
+              prepare({ label, address }) {
+                return { title: label ? `${label}: ${address}` : address };
+              },
+            },
+          }],
         }),
         defineField({
           name: 'buttonText',
