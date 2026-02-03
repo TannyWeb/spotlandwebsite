@@ -134,9 +134,8 @@ export default function ServiceDetail({ service, featuredPostSlug }: ServiceDeta
                   <h3 className="text-lg font-semibold text-slate-900">Location</h3>
                 </div>
                 <p className="text-slate-900 text-base leading-relaxed pl-7">
-                  123 Community Street<br />
-                  Spotland, Manchester<br />
-                  M12 4AB
+                  92-96 Spotland Road<br />
+                  Rochdale, OL12 6PJ
                 </p>
               </div>
 
