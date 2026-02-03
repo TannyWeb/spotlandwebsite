@@ -9,7 +9,7 @@ interface Props {
   description?: string;
 }
 
-const { title, description = 'Spotland Community Centre - Your friendly neighbourhood hub for advice, health, youth programs, and education.' } = Astro.props;
+const { title, description = 'Spotland Community Association - Your friendly neighbourhood hub for advice, health, youth programs, and education.' } = Astro.props;
 
 // Fetch navigation data
 let navigation;
@@ -66,7 +66,7 @@ const featuredPostUrl = featuredPostSlug ? `/news/${featuredPostSlug}` : null;
               class="h-10 md:h-12 w-auto"
               aria-hidden="true"
             />
-            <span class="hidden md:inline">Spotland Community Centre</span>
+            <span class="hidden md:inline">Spotland Community Association</span>
           </a>
 
           <div class="flex items-center gap-6">
@@ -120,7 +120,7 @@ const featuredPostUrl = featuredPostSlug ? `/news/${featuredPostSlug}` : null;
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left md:text-center mb-12">
             <div>
               <h3 class="text-lg font-semibold text-white mb-3">Contact</h3>
-              <p class="text-slate-300 text-base mb-2">Spotland Community Centre</p>
+              <p class="text-slate-300 text-base mb-2">Spotland Community Association</p>
               <p class="text-slate-300 text-base mb-2">Spotland Road, Rochdale</p>
               <p class="text-slate-300 text-base">OL12 6PJ</p>
             </div>
