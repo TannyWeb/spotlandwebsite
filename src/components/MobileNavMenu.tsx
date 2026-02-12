@@ -146,7 +146,7 @@ export default function MobileNavMenu({ menuItems }: Props) {
             {/* Hardcoded Contact Us link */}
             <li>
               <a
-                href="tel:01706568810"
+                href="tel:01706354151"
                 onClick={closeDrawer}
                 className="flex items-center px-6 py-4 text-lg text-slate-700 hover:text-brand-teal hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-teal min-h-[44px]"
               >
