@@ -169,29 +169,30 @@ if (aboutContent?.ourStoryImage) {
     </div>
   </section>
 
-  <!-- Meet the Staff Section -->
-  {(aboutContent?.showTeam !== false) && team.length > 0 && (
-    <section class="py-24 bg-slate-50 px-4 sm:px-6 lg:px-8">
+  <!-- News & Updates Section -->
+  {posts.length > 0 && (
+    <section class="py-24 bg-white px-4 sm:px-6 lg:px-8">
       <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-16">
-          <div class="inline-flex items-center gap-2 mb-4 bg-teal-100 text-teal-700 px-4 py-1.5 rounded-full text-sm font-semibold">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            <span>Our Team</span>
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">
+              Latest from the Spotland Association
+            </h2>
+            <p class="text-xl text-slate-600 max-w-2xl leading-relaxed">
+              Check out our latest news, stories, and updates from the Spotland community.
+            </p>
           </div>
-
-          <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-            The friendly faces you'll see
-          </h2>
-          <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Our dedicated staff are here to help you feel at home. Meet the people who make everything happen at the Association.
-          </p>
+          <a href="/news" class="text-brand-teal font-bold text-lg hover:underline inline-flex items-center gap-2 min-h-[44px]">
+            View all news
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {team.map((member: any) => (
-            <TeamMemberCard member={member} />
+          {posts.slice(0, 3).map((post: any) => (
+            <NewsCard post={post} />
           ))}
         </div>
       </div>
@@ -268,33 +269,33 @@ if (aboutContent?.ourStoryImage) {
     </div>
   </section>
 
-  <!-- News & Updates Section -->
-  {posts.length > 0 && (
-    <section class="py-24 bg-white px-4 sm:px-6 lg:px-8">
+  <!-- Meet the Staff Section -->
+  {(aboutContent?.showTeam !== false) && team.length > 0 && (
+    <section class="py-24 bg-slate-50 px-4 sm:px-6 lg:px-8">
       <div class="max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-          <div>
-            <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">
-              Latest from the Spotland Association
-            </h2>
-            <p class="text-xl text-slate-600 max-w-2xl leading-relaxed">
-              Check out our latest news, stories, and updates from the Spotland community.
-            </p>
-          </div>
-          <a href="/news" class="text-brand-teal font-bold text-lg hover:underline inline-flex items-center gap-2 min-h-[44px]">
-            View all news
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        <div class="text-center mb-16">
+          <div class="inline-flex items-center gap-2 mb-4 bg-teal-100 text-teal-700 px-4 py-1.5 rounded-full text-sm font-semibold">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-          </a>
+            <span>Our Team</span>
+          </div>
+
+          <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
+            The friendly faces you'll see
+          </h2>
+          <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            Our dedicated staff are here to help you feel at home. Meet the people who make everything happen at the Association.
+          </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {posts.slice(0, 3).map((post: any) => (
-            <NewsCard post={post} />
+          {team.map((member: any) => (
+            <TeamMemberCard member={member} />
           ))}
         </div>
       </div>
     </section>
   )}
+
 </MainLayout>
