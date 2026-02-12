@@ -17,7 +17,6 @@ const dayNames: Record<string, string> = {
 };
 
 function getTodayNameUK() {
-  // Force UK day name (not visitor locale, not server timezone)
   const day = new Intl.DateTimeFormat("en-GB", {
     weekday: "long",
     timeZone: "Europe/London",
@@ -31,10 +30,7 @@ function getTodayNameUK() {
 export default function WhatsOnTodayClient({ services }: Props) {
   const todayName = useMemo(() => getTodayNameUK(), []);
 
-  const upcomingServices = useMemo(() => {
-    // This will now run in the browser (live time)
-    return getUpcomingServices(services, 3);
-  }, [services]);
+  const upcomingServices = useMemo(() => getUpcomingServices(services, 3), [services]);
 
   const hasRunningNow = upcomingServices.some((s) => s.status === "running-now");
   const hasScheduledServices = upcomingServices.length > 0;
@@ -45,31 +41,15 @@ export default function WhatsOnTodayClient({ services }: Props) {
       aria-labelledby="whats-on-heading"
     >
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
-          {/* Context indicator */}
           <div className="inline-flex items-center gap-2 mb-3 text-teal-700 text-sm font-medium bg-teal-50 px-4 py-1.5 rounded-full border border-teal-200">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>Today is {todayName}</span>
           </div>
 
-          <h2
-            id="whats-on-heading"
-            className="text-3xl md:text-4xl font-bold text-slate-900 mb-4"
-          >
+          <h2 id="whats-on-heading" className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
             What's On
           </h2>
 
@@ -88,7 +68,6 @@ export default function WhatsOnTodayClient({ services }: Props) {
           )}
         </div>
 
-        {/* Service Cards Grid - Always 3 cards */}
         {hasScheduledServices ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
             {upcomingServices.map((item) => (
@@ -109,13 +88,10 @@ export default function WhatsOnTodayClient({ services }: Props) {
           </div>
         ) : (
           <div className="text-center py-12 bg-white rounded-3xl shadow-sm mb-10">
-            <p className="text-slate-600 text-lg">
-              Check back soon for our upcoming services and events.
-            </p>
+            <p className="text-slate-600 text-lg">Check back soon for our upcoming services and events.</p>
           </div>
         )}
 
-        {/* CTA Button */}
         <div className="text-center">
           <a
             href="/services"
