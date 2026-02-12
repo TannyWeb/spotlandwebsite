@@ -74,24 +74,6 @@ export default function ServiceDetail({ service, featuredPostSlug }: ServiceDeta
           />
         </AspectRatio>
 
-        {/* Stats Bar - 3-column horizontal bar beneath hero */}
-        <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-6 py-6 border-b border-slate-200/60">
-          <div className="flex items-center gap-3">
-            <Coffee className="w-6 h-6 text-brand-accent" aria-hidden="true" />
-            <span className="text-lg text-slate-700 font-medium">Free Refreshments</span>
-          </div>
-          <div className="hidden sm:block w-px h-8 bg-slate-300" aria-hidden="true"></div>
-          <div className="flex items-center gap-3">
-            <Building2 className="w-6 h-6 text-brand-accent" aria-hidden="true" />
-            <span className="text-lg text-slate-700 font-medium">Accessible Venue</span>
-          </div>
-          <div className="hidden sm:block w-px h-8 bg-slate-300" aria-hidden="true"></div>
-          <div className="flex items-center gap-3">
-            <Calendar className="w-6 h-6 text-brand-accent" aria-hidden="true" />
-            <span className="text-lg text-slate-700 font-medium">No Booking Needed</span>
-          </div>
-        </div>
-      </div>
 
       {/* Introduction Grid - 70/30 split */}
       <div className="grid grid-cols-1 lg:grid-cols-[7fr_3fr] gap-8 py-8">
