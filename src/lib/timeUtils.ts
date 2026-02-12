@@ -18,19 +18,41 @@ interface ServiceWithSchedule {
 }
 
 /**
- * Get current day of week in lowercase format
+ * Timezone to use for all "what's on" calculations
+ * (Spotland is UK-based, so we anchor to Europe/London)
  */
-export function getCurrentDay(): DayOfWeek {
-  const days: DayOfWeek[] = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-  return days[new Date().getDay()];
+const DEFAULT_TIMEZONE = 'Europe/London';
+
+/**
+ * Get current day of week in lowercase format (UK time)
+ */
+export function getCurrentDay(timeZone: string = DEFAULT_TIMEZONE): DayOfWeek {
+  const day = new Intl.DateTimeFormat('en-GB', {
+    weekday: 'long',
+    timeZone
+  })
+    .format(new Date())
+    .toLowerCase();
+
+  // day will be like "monday", "tuesday", etc.
+  return day as DayOfWeek;
 }
 
 /**
- * Get current time in minutes since midnight
+ * Get current time in minutes since midnight (UK time)
  */
-export function getCurrentTimeInMinutes(): number {
-  const now = new Date();
-  return now.getHours() * 60 + now.getMinutes();
+export function getCurrentTimeInMinutes(timeZone: string = DEFAULT_TIMEZONE): number {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone
+  }).formatToParts(new Date());
+
+  const hour = Number(parts.find(p => p.type === 'hour')?.value ?? '0');
+  const minute = Number(parts.find(p => p.type === 'minute')?.value ?? '0');
+
+  return hour * 60 + minute;
 }
 
 /**
@@ -79,12 +101,16 @@ export function getServicesLaterToday(services: ServiceWithSchedule[]): ServiceW
     })
     .sort((a, b) => {
       // Sort by earliest start time today
-      const aStart = Math.min(...a.scheduleStructured!
-        .filter(s => s.dayOfWeek === currentDay)
-        .map(s => timeToMinutes(s.startTime)));
-      const bStart = Math.min(...b.scheduleStructured!
-        .filter(s => s.dayOfWeek === currentDay)
-        .map(s => timeToMinutes(s.startTime)));
+      const aStart = Math.min(
+        ...a.scheduleStructured!
+          .filter(s => s.dayOfWeek === currentDay)
+          .map(s => timeToMinutes(s.startTime))
+      );
+      const bStart = Math.min(
+        ...b.scheduleStructured!
+          .filter(s => s.dayOfWeek === currentDay)
+          .map(s => timeToMinutes(s.startTime))
+      );
       return aStart - bStart;
     });
 }
@@ -112,18 +138,22 @@ export function getEarliestServiceTomorrow(services: ServiceWithSchedule[]): Ser
   if (tomorrowServices.length === 0) return null;
 
   return tomorrowServices.sort((a, b) => {
-    const aStart = Math.min(...a.scheduleStructured!
-      .filter(s => s.dayOfWeek === tomorrow)
-      .map(s => timeToMinutes(s.startTime)));
-    const bStart = Math.min(...b.scheduleStructured!
-      .filter(s => s.dayOfWeek === tomorrow)
-      .map(s => timeToMinutes(s.startTime)));
+    const aStart = Math.min(
+      ...a.scheduleStructured!
+        .filter(s => s.dayOfWeek === tomorrow)
+        .map(s => timeToMinutes(s.startTime))
+    );
+    const bStart = Math.min(
+      ...b.scheduleStructured!
+        .filter(s => s.dayOfWeek === tomorrow)
+        .map(s => timeToMinutes(s.startTime))
+    );
     return aStart - bStart;
   })[0];
 }
 
 /**
- * Get human-readable time from HH:MM (e.g., "10:00" -> "10am")
+ * Get human-readable time from HH:MM (e.g., "10:00" -> "10:00am")
  */
 export function formatTime(timeString: string): string {
   const [hours, minutes] = timeString.split(':').map(Number);
@@ -135,7 +165,7 @@ export function formatTime(timeString: string): string {
 }
 
 /**
- * Get display text for a schedule (e.g., "10am - 2pm")
+ * Get display text for a schedule (e.g., "10:00am - 2:00pm")
  */
 export function getScheduleDisplayText(schedule: ServiceSchedule): string {
   return `${formatTime(schedule.startTime)} - ${formatTime(schedule.endTime)}`;
@@ -160,7 +190,10 @@ function getDayName(day: DayOfWeek): string {
 /**
  * Get services for a specific day, sorted by start time
  */
-function getServicesForDay(services: ServiceWithSchedule[], day: DayOfWeek): Array<{
+function getServicesForDay(
+  services: ServiceWithSchedule[],
+  day: DayOfWeek
+): Array<{
   service: ServiceWithSchedule;
   schedule: ServiceSchedule;
 }> {
@@ -177,16 +210,17 @@ function getServicesForDay(services: ServiceWithSchedule[], day: DayOfWeek): Arr
   }
 
   // Sort by start time
-  return results.sort((a, b) =>
-    timeToMinutes(a.schedule.startTime) - timeToMinutes(b.schedule.startTime)
-  );
+  return results.sort((a, b) => timeToMinutes(a.schedule.startTime) - timeToMinutes(b.schedule.startTime));
 }
 
 /**
  * Get MULTIPLE upcoming services (for "What's On" section)
  * Returns up to `count` services with their status and time info
  */
-export function getUpcomingServices(services: ServiceWithSchedule[], count: number = 3): Array<{
+export function getUpcomingServices(
+  services: ServiceWithSchedule[],
+  count: number = 3
+): Array<{
   service: ServiceWithSchedule;
   status: 'running-now' | 'later-today' | 'tomorrow' | 'upcoming';
   timeText: string;
@@ -201,9 +235,7 @@ export function getUpcomingServices(services: ServiceWithSchedule[], count: numb
     schedule: ServiceSchedule;
   }> = [];
 
-  const scheduledServices = services.filter(
-    s => s.scheduleStructured && s.scheduleStructured.length > 0
-  );
+  const scheduledServices = services.filter(s => s.scheduleStructured && s.scheduleStructured.length > 0);
 
   if (scheduledServices.length === 0) return results;
 
@@ -307,16 +339,14 @@ export function getNextUpcomingService(services: ServiceWithSchedule[]): {
   context: 'running-now' | 'later-today' | 'tomorrow' | 'none';
   timeText: string;
 } {
-  const scheduledServices = services.filter(
-    s => s.scheduleStructured && s.scheduleStructured.length > 0
-  );
+  const scheduledServices = services.filter(s => s.scheduleStructured && s.scheduleStructured.length > 0);
 
   // 1. Check if anything is running NOW
   const runningNow = scheduledServices.find(s => isServiceRunningNow(s.scheduleStructured!));
   if (runningNow) {
     const currentDay = getCurrentDay();
-    const schedule = runningNow.scheduleStructured!.find(s =>
-      s.dayOfWeek === currentDay && isServiceRunningNow([s])
+    const schedule = runningNow.scheduleStructured!.find(
+      s => s.dayOfWeek === currentDay && isServiceRunningNow([s])
     );
     return {
       service: runningNow,
