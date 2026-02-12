@@ -73,7 +73,7 @@ export default function ServiceDetail({ service, featuredPostSlug }: ServiceDeta
             loading="eager"
           />
         </AspectRatio>
-
+      </div> {/* ✅ FIX: close Hero Section wrapper */}
 
       {/* Introduction Grid - 70/30 split */}
       <div className="grid grid-cols-1 lg:grid-cols-[7fr_3fr] gap-8 py-8">
@@ -183,7 +183,7 @@ export default function ServiceDetail({ service, featuredPostSlug }: ServiceDeta
               Ready to Join Us?
             </CardTitle>
             <p className="text-teal-50 text-lg">
-              We'd love to hear from you and help you get started.
+              we'd love to hear from you and help you get started.
             </p>
           </CardHeader>
           <CardContent className="p-8 pt-0 space-y-6">
@@ -245,4 +245,3 @@ export default function ServiceDetail({ service, featuredPostSlug }: ServiceDeta
     </div>
   )
 }
-
