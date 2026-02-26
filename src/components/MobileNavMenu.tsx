@@ -153,6 +153,19 @@ export default function MobileNavMenu({ menuItems }: Props) {
                 Contact Us
               </a>
             </li>
+            <li>
+              <a
+                href="https://www.gofundme.com/f/spotland-community-association"
+                onClick={closeDrawer}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center mx-6 mt-2 px-6 py-4 text-lg font-semibold text-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-teal min-h-[44px] shadow-sm hover:brightness-95"
+                style={{ backgroundColor: '#E2725B' }} // terracotta
+                aria-label="Donate (opens in new tab)"
+              >
+                Donate
+              </a>
+            </li>
           </ul>
         </nav>
       </div>
